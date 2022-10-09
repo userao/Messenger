@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/userao/frontend-project-12#readme",
   "dependencies": {
-    "@hexlet/chat-server": "^1.1.6"
+    "@hexlet/chat-server": "^1.1.6",
+    "cn": "^0.1.1"
   }
 }
