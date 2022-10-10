@@ -2,30 +2,22 @@ import React from 'react';
 import Form from 'react-bootstrap/Form';
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Button from 'react-bootstrap/Button';
+import { useSelector, useDispatch } from 'react-redux';
+import { makeValid, makeInvalid } from '../registerFormSlice.js';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import keyBy from 'lodash/keyBy.js';
 
 const SignupForm = () => {
-  const schema = yup.object().shape({
-    username: yup.string().trim().required().min(3).max(20),
-    password: yup.string().required().min(6),
-    passwordConfirmation: yup.string()
-      .required('password confirmation is a required field')
-      .oneOf(
-        [yup.ref('password'), null],
-        'password confirmation does not match to password',
-      ),
-  });
-
-  const validate = async (values) => {
-    try {
-      schema.validateSync(values, { abortEarly: false });
-      return {};
-    } catch (e) {
-      return keyBy(e.inner, 'path');
-    }
-  };
+  // const validationState = useSelector((state) => {
+  //   const { username, password, passwordConfirmation } = state.registerForm.validationState;
+  //   return {
+  //     username,
+  //     password,
+  //     passwordConfirmation,
+  //   }
+  // });
+  // const dispatch = useDispatch();
 
   const formik = useFormik({
     initialValues: {
@@ -33,7 +25,22 @@ const SignupForm = () => {
       password: '',
       passwordConfirmation: '',
     },
-    validate,
+    validationSchema: yup.object({
+      username: yup.string()
+        .trim()
+        .min(3, 'Must be 3 to 20 symbols')
+        .max(20, 'Must be 3 to 20 symbols')
+        .required('This is required field'),
+      password: yup.string()
+        .min(6, 'Musts be longer then 6 symbols')
+        .required('This is required field'),
+      passwordConfirmation: yup.string()
+        .oneOf(
+          [yup.ref('password'), null],
+          'Must match password',
+        )
+        .required('This is required field'),
+      }),
     onSubmit: (values) => {
       console.log(JSON.stringify(values, null, 2));
     },
@@ -60,12 +67,14 @@ const SignupForm = () => {
                       type="username"
                       placeholder="Enter username"
                       onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
                       value={formik.values.username}
+                      className={formik.touched.username && formik.errors.username ? 'is-invalid' : null}
                     />
                     {
-                      formik.errors.username
-                        ? <div className="alert-danger" placement="right">{formik.errors.username.message}</div>
-                        : null
+                      formik.touched.username && formik.errors.username ? (
+                        <div className="invalid-tooltip">{formik.errors.username}</div>
+                    ) : null
                     }
                   </FloatingLabel>
                 </Form.Group>
@@ -83,13 +92,15 @@ const SignupForm = () => {
                       type="password"
                       placeholder="Enter password"
                       onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
                       value={formik.values.password}
+                      className={formik.touched.password && formik.errors.password ? 'is-invalid' : null}
                     />
                     {
-                    formik.errors.password
-                      ? <div className="alert-danger" placement="right">{formik.errors.password.message}</div>
-                      : null
-                  }
+                      formik.touched.password && formik.errors.password ? (
+                        <div className="invalid-tooltip">{formik.errors.password}</div>
+                    ) : null
+                    }
                   </FloatingLabel>
                 </Form.Group>
 
@@ -106,12 +117,14 @@ const SignupForm = () => {
                       type="password"
                       placeholder="Confirm your password"
                       onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
                       value={formik.values.repeatPassword}
+                      className={formik.touched.passwordConfirmation && formik.errors.passwordConfirmation ? 'is-invalid' : null}
                     />
                     {
-                    formik.errors.passwordConfirmation
-                      ? <div className="alert-danger" placement="right">{formik.errors.passwordConfirmation.message}</div>
-                      : null
+                      formik.touched.passwordConfirmation && formik.errors.passwordConfirmation ? (
+                        <div className="invalid-tooltip">{formik.errors.passwordConfirmation}</div>
+                    ) : null
                     }
                   </FloatingLabel>
                 </Form.Group>
