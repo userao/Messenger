@@ -1,8 +1,8 @@
 import { configureStore } from '@reduxjs/toolkit';
-import registerFormReducer from './registerFormSlice.js';
+import channelsReducer from './slices/channelsSlice.js';
 
 export const store = configureStore({
   reducer: {
-    registerForm: registerFormReducer,
+    channels: channelsReducer,
   },
 });

@@ -33,7 +33,6 @@ const LoginForm = () => {
       })
       .catch((e) => {
         setLoginState('error');
-        console.log(e);
       });
   };
   

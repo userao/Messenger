@@ -3,21 +3,12 @@ import Form from 'react-bootstrap/Form';
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Button from 'react-bootstrap/Button';
 import { useSelector, useDispatch } from 'react-redux';
-import { makeValid, makeInvalid } from '../registerFormSlice.js';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import keyBy from 'lodash/keyBy.js';
 
 const SignupForm = () => {
-  // const validationState = useSelector((state) => {
-  //   const { username, password, passwordConfirmation } = state.registerForm.validationState;
-  //   return {
-  //     username,
-  //     password,
-  //     passwordConfirmation,
-  //   }
-  // });
-  // const dispatch = useDispatch();
+
 
   const formik = useFormik({
     initialValues: {
