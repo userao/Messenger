@@ -15,12 +15,12 @@ import {
 } from 'react-bootstrap';
 import Chat from './Chat.jsx';
 import LoginForm from './Login.jsx';
-import SignupForm from './Signup.jsx'
+import SignupForm from './Signup.jsx';
 import NotFound from './NotFound.jsx';
 import AuthContext from '../context/AuthContext.js';
 import useAuth from '../hooks/useAuth.js';
 
-const AuthProvider = ({children}) => {
+const AuthProvider = ({ children }) => {
   const [loggedIn, setLoggedIn] = useState(false);
 
   const logIn = () => setLoggedIn(true);
@@ -50,12 +50,12 @@ const AuthButton = () => {
   const location = useLocation();
 
   const buttonTypes = {
-    true: () =>  <Button onClick={auth.logOut}>Log out</Button>,
+    true: () => <Button onClick={auth.logOut}>Log out</Button>,
     false: () => {
       if (location.pathname === '/login') return null;
       return <Button href="/login" state={{ from: location }}>Log in</Button>;
     },
-  }
+  };
   const buttonElement = buttonTypes[auth.loggedIn]();
 
   return buttonElement;
@@ -72,7 +72,7 @@ const App = () => (
               <AuthButton />
             </Container>
           </Navbar>
-        
+
           <Routes>
             <Route exact path="/login" element={<LoginForm />} />
             <Route exact path="/signup" element={<SignupForm />} />
