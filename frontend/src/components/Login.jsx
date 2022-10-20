@@ -27,7 +27,10 @@ const LoginForm = () => {
     setLoginState('requesting');
     axios.post(routes.loginPath(), auth)
       .then((response) => {
-        localStorage.setItem('userId', JSON.stringify({ token: response.data.token }));
+        localStorage.setItem('user', JSON.stringify({
+          token: response.data.token,
+          name: auth.username,
+        }));
         context.logIn();
         setLoginState('success');
       })

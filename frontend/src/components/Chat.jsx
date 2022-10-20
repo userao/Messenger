@@ -12,23 +12,34 @@ import {
   actions as messagesActions,
   selectors as messagesSelectors
 } from '../slices/messagesSlice.js'
+import { actions as modalActions } from '../slices/modalSlice.js';
 import routes from '../routes.js';
 import useAuth from '../hooks/useAuth.js';
 import cn from 'classnames';
 import { useFormik } from 'formik';
-import io from 'socket.io-client';
+// import io from 'socket.io-client';
 
-const socket = io.connect();
+// const socket = io.connect();
 
 const getAuthHeader = () => {
-  const userId = JSON.parse(localStorage.getItem('userId'));
+  const user = JSON.parse(localStorage.getItem('user'));
 
-  if (userId && userId.token) {
-    return { Authorization: `Bearer ${userId.token}` };
+  if (user && user.token) {
+    return { Authorization: `Bearer ${user.token}` };
   }
 
   return {};
 };
+
+const getUsername = () => {
+  const user = JSON.parse(localStorage.getItem('user'));
+
+  if (user && user.name) {
+    return user.name;
+  }
+
+  return null;
+}
 
 const getNormalized = (data) => {
   const channels = data.channels.map((channel) => {
@@ -51,8 +62,7 @@ const renderChannel = (channel, dispatch) => {
   );
 };
 
-const renderMessage = (message, channelId) => {
-  if (channelId !== message.channelId) return null;
+const renderMessage = (message) => {
   return (
     <div key={message.id} className="text-break mb-2">
       <b>{message.username}</b>: {message.body}
@@ -61,13 +71,17 @@ const renderMessage = (message, channelId) => {
 }
 
 const Home = () => {
+  const { socket } = useAuth();
   const headers = getAuthHeader();
   const dispatch = useDispatch();
   const messageInput = useRef(null);
   const form = useRef(null);
   const userChannels = useSelector(channelsSelectors.selectAll);
   const activeChannel = userChannels.find((channel) => channel.active);
-  const channelMessages = useSelector(messagesSelectors.selectAll);
+  const channelMessages = useSelector(messagesSelectors.selectAll)
+    .filter((message) => message.channelId === activeChannel.id);
+  const username = getUsername();
+  const [sendButtonDisabled, setSendButtonDisabled] = useState(false);
 
   const formik = useFormik({
     initialValues: {
@@ -76,23 +90,26 @@ const Home = () => {
     onSubmit: (values) => handleSubmit(values),
   });
 
-  
-  // const handleSubmit = (value) => (e) => {
-  //   e.preventDefault();
-  //   socket.emit('newMessage', { body: value, channelId: activeChannel.id, username: 'admin' });
-  //   form.current.reset();
-  // };
-
   const handleSubmit = (values) => {
     const text = values.body;
-    socket.emit('newMessage', { body: text, channelId: activeChannel.id, username: 'admin' });
+    socket.emit('newMessage', { body: text, channelId: activeChannel.id, username });
     formik.values.body = '';
+    setSendButtonDisabled(true);
   }
+
+  const setDisplayedModal = (modalType) => {
+    dispatch(modalActions.setDisplayedModal(modalType));
+  };
  
   useEffect(() => {
     socket.on('newMessage', (payload) => {
       dispatch(messagesActions.addMessage(payload));
+      setSendButtonDisabled(false);
     });
+
+    socket.on('newChannel', (payload) => {
+      dispatch(channelsActions.addChannel(payload));
+    })
   }, [socket]);
 
 
@@ -117,7 +134,11 @@ const Home = () => {
         <div className="col-4 col-md-2 border-end pt-5 px-0 bg-light">
           <div className="d-flex justify-content-between mb-2 ps-4 pe-2">
             <span>Channels</span>
-            <button type="button" className="p-0 text-primary btn btn-group-vertical"></button>
+            <Button
+              variant="outline-primary"
+              className="p-0 text-primary"
+              onClick={() => setDisplayedModal('adding')}
+            > + </Button>
           </div>
           <ul className="nav flex-column nav-pills nav-fill px-2">
             {userChannels.map((channel) => renderChannel(channel, dispatch))}
@@ -127,10 +148,10 @@ const Home = () => {
           <div className="d-flex flex-column h-100">
             <div className="bg-light mb-4 p-3 shadow-sm small">
               <p className="m-0"><b># {activeChannel.name}</b></p>
-              <span className="text-muted">*MSGS COUNT*</span>
+              <span className="text-muted">{channelMessages.length}</span>
             </div>
             <div className="chat-messages overflow-auto px-5" id="message-box">
-              {channelMessages.map((message) => renderMessage(message, activeChannel.id))}
+              {channelMessages.map((message) => renderMessage(message))}
             </div>
             <div className="mt-auto px-5 py-3">
               <Form onSubmit={formik.handleSubmit} ref={form}  noValidate className="py-1 border rounded-2">
@@ -143,10 +164,11 @@ const Home = () => {
                     name="body"
                     aria-label="New message"
                     placeholder="Type your message..."
+                    autoComplete="off"
                   />
                   <Button
                     type="submit"
-                    disabled={!formik.values.body.trim().length}
+                    disabled={sendButtonDisabled}
                     className="btn btn-group-vertical"
                   />
                 </div>

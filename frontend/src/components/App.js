@@ -19,6 +19,13 @@ import SignupForm from './Signup.jsx';
 import NotFound from './NotFound.jsx';
 import AuthContext from '../context/AuthContext.js';
 import useAuth from '../hooks/useAuth.js';
+import ModalWindow from './ModalWindow.jsx';
+import io from 'socket.io-client';
+import { useSelector } from 'react-redux';
+
+const socket = io.connect();
+
+// ПЕРЕДАЛ СОКЕТ В КОНТЕКСТЕ, НУЖНО СДЕЛАТЬ СОЗДАНИЕ НОВОГО КАНАЛА
 
 const AuthProvider = ({ children }) => {
   const [loggedIn, setLoggedIn] = useState(false);
@@ -30,7 +37,7 @@ const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ loggedIn, logIn, logOut }}>
+    <AuthContext.Provider value={{ loggedIn, logIn, logOut, socket }}>
       {children}
     </AuthContext.Provider>
   );
@@ -63,6 +70,7 @@ const AuthButton = () => {
 
 const App = () => (
   <AuthProvider>
+    <ModalWindow modalType={useSelector((state) => state.modal.displayedModal)} />
     <div className="h-100" id="chat">
       <div className="d-flex flex-column h-100">
         <Router>
