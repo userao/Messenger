@@ -32,26 +32,11 @@ const channelsSlice = createSlice({
       });
       channelsAdapter.updateMany(state, updates);
     },
-  },
-  // extraReducers: (builder) => {
-  //   builder
-  //     .addCase(fetchData.pending, (state) => {
-  //       state.fetchingStatus = 'loading';
-  //       state.error = null;
-  //     })
-  //     .addCase(fetchData.fulfilled, (state, { payload }) => {
-  //       payload.channels.forEach((channel) => {
-  //         const active = channel.id === payload.currentChannelId;
-  //         channelsAdapter.addOne(state, { ...channel, active });
-  //       })
-  //       state.loadingStatus = 'idle';
-  //       state.error = null;
-  //     })
-  //     .addCase(fetchData.rejected, (state, action) => {
-  //       state.loadingStatus = 'failed';
-  //       state.error = action.error;
-  //     });
-  // }
+    renameChannel: (state, { payload }) => {
+      channelsAdapter.updateOne(state, { id: payload.id, changes: { name: payload.name }});
+    },
+    removeChannel: channelsAdapter.removeOne,
+  }
 });
 
 export const { actions } = channelsSlice;

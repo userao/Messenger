@@ -5,11 +5,14 @@ import _ from 'lodash';
 const modalSlice = createSlice({
   name: 'modal',
   initialState: {
-    displayedModal: null,
+    displayedModal: {
+      type: null,
+      channelId: null,
+    },
   },
   reducers: {
     setDisplayedModal: (state, { payload }) => {
-      state.displayedModal = payload;
+      state.displayedModal = { ...state.displayedModal, ...payload };
     },
   }
 });

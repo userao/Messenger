@@ -13,6 +13,12 @@ const messagesSlice = createSlice({
     addMessage: messagesAdapter.addOne,
     addMessages: messagesAdapter.addMany,
   },
+  extraReducers: (builder) => {
+    builder.addCase(channelsActions.removeChannel, (state, { payload }) => {
+      const idsToDelete = state.ids.filter((id) => state.entities[id].channelId === payload);
+      messagesAdapter.removeMany(state, idsToDelete);
+    });
+  }
 });
 
 export const { actions } = messagesSlice;

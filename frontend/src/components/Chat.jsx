@@ -17,9 +17,9 @@ import routes from '../routes.js';
 import useAuth from '../hooks/useAuth.js';
 import cn from 'classnames';
 import { useFormik } from 'formik';
-// import io from 'socket.io-client';
+import Channels from './Channels.jsx';
 
-// const socket = io.connect();
+// TODO переделать кнопку для удаляемых каналов, добавить модалку для удаления
 
 const getAuthHeader = () => {
   const user = JSON.parse(localStorage.getItem('user'));
@@ -49,18 +49,6 @@ const getNormalized = (data) => {
   const messages = data.messages;
   return { channels, messages };
 }
-
-const renderChannel = (channel, dispatch) => {
-  const itemClasses = cn('w-100', 'rounded-0', 'text-start', 'btn', { 'btn-secondary': channel.active });
-  return (
-    <li key={channel.id} className="nav-item w-100">
-      <button onClick={() => dispatch(channelsActions.setActiveChannel(channel.id))} className={itemClasses} type="button">
-        <span className="me-1">#</span>
-        {channel.name}
-      </button>
-    </li>
-  );
-};
 
 const renderMessage = (message) => {
   return (
@@ -97,8 +85,8 @@ const Home = () => {
     setSendButtonDisabled(true);
   }
 
-  const setDisplayedModal = (modalType) => {
-    dispatch(modalActions.setDisplayedModal(modalType));
+  const setDisplayedModal = (type) => {
+    dispatch(modalActions.setDisplayedModal(type));
   };
  
   useEffect(() => {
@@ -109,7 +97,18 @@ const Home = () => {
 
     socket.on('newChannel', (payload) => {
       dispatch(channelsActions.addChannel(payload));
-    })
+      dispatch(channelsActions.setActiveChannel(payload.id));
+    });
+
+    socket.on('renameChannel', (payload) => {
+      console.log('renaming channel')
+      dispatch(channelsActions.renameChannel(payload));
+    });
+
+    socket.on('removeChannel', (payload) => {
+      dispatch(channelsActions.setActiveChannel(1));
+      dispatch(channelsActions.removeChannel(payload.id));
+    });
   }, [socket]);
 
 
@@ -137,12 +136,10 @@ const Home = () => {
             <Button
               variant="outline-primary"
               className="p-0 text-primary"
-              onClick={() => setDisplayedModal('adding')}
+              onClick={() => setDisplayedModal({ type: 'adding' })}
             > + </Button>
           </div>
-          <ul className="nav flex-column nav-pills nav-fill px-2">
-            {userChannels.map((channel) => renderChannel(channel, dispatch))}
-          </ul>
+          <Channels channels={userChannels} />
         </div>
         <div className="col p-0 h-100">
           <div className="d-flex flex-column h-100">
