@@ -22,10 +22,9 @@ import useAuth from '../hooks/useAuth.js';
 import ModalWindow from './ModalWindow.jsx';
 import io from 'socket.io-client';
 import { useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 
 const socket = io.connect();
-
-// ПЕРЕДАЛ СОКЕТ В КОНТЕКСТЕ, НУЖНО СДЕЛАТЬ СОЗДАНИЕ НОВОГО КАНАЛА
 
 const AuthProvider = ({ children }) => {
   const [loggedIn, setLoggedIn] = useState(false);
@@ -52,53 +51,59 @@ const ChatRoute = ({ children }) => {
   );
 };
 
-const AuthButton = () => {
-  const auth = useAuth();
-  const location = useLocation();
 
-  const buttonTypes = {
-    true: () => <Button onClick={auth.logOut}>Log out</Button>,
-    false: () => {
-      if (location.pathname === '/login') return null;
-      return <Button href="/login" state={{ from: location }}>Log in</Button>;
-    },
+
+const App = () => {
+  const { t } = useTranslation('translation', { keyPrefix: 'navbar' });
+
+  const AuthButton = () => {
+    const auth = useAuth();
+    const location = useLocation();
+  
+    const buttonTypes = {
+      true: () => <Button onClick={auth.logOut}>{t('logOutButton')}</Button>,
+      false: () => {
+        if (location.pathname === '/login') return null;
+        return <Button href="/login" state={{ from: location }}>{t('logInButton')}</Button>;
+      },
+    };
+    const buttonElement = buttonTypes[auth.loggedIn]();
+  
+    return buttonElement;
   };
-  const buttonElement = buttonTypes[auth.loggedIn]();
 
-  return buttonElement;
-};
+  return (
+    <AuthProvider>
+      <ModalWindow displayedModal={useSelector((state) => state.modal.displayedModal)} />
+      <div className="h-100" id="chat">
+        <div className="d-flex flex-column h-100">
+          <Router>
+            <Navbar className="shadow-sm" bg="light" expand="lg">
+              <Container>
+                <Navbar.Brand href="/">{t('brand')}</Navbar.Brand>
+                <AuthButton />
+              </Container>
+            </Navbar>
 
-const App = () => (
-  <AuthProvider>
-    <ModalWindow displayedModal={useSelector((state) => state.modal.displayedModal)} />
-    <div className="h-100" id="chat">
-      <div className="d-flex flex-column h-100">
-        <Router>
-          <Navbar className="shadow-sm" bg="light" expand="lg">
-            <Container>
-              <Navbar.Brand href="/">My chat</Navbar.Brand>
-              <AuthButton />
-            </Container>
-          </Navbar>
-
-          <Routes>
-            <Route exact path="/login" element={<LoginForm />} />
-            <Route exact path="/signup" element={<SignupForm />} />
-            <Route
-              exact
-              path="/"
-              element={(
-                <ChatRoute>
-                  <Chat />
-                </ChatRoute>
-              )}
-            />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </Router>
+            <Routes>
+              <Route exact path="/login" element={<LoginForm />} />
+              <Route exact path="/signup" element={<SignupForm />} />
+              <Route
+                exact
+                path="/"
+                element={(
+                  <ChatRoute>
+                    <Chat />
+                  </ChatRoute>
+                )}
+              />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </Router>
+        </div>
       </div>
-    </div>
-  </AuthProvider>
-);
+    </AuthProvider>
+  )
+};
 
 export default App;

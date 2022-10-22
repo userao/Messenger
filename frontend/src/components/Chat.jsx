@@ -18,8 +18,7 @@ import useAuth from '../hooks/useAuth.js';
 import cn from 'classnames';
 import { useFormik } from 'formik';
 import Channels from './Channels.jsx';
-
-// TODO переделать кнопку для удаляемых каналов, добавить модалку для удаления
+import { useTranslation } from 'react-i18next';
 
 const getAuthHeader = () => {
   const user = JSON.parse(localStorage.getItem('user'));
@@ -70,6 +69,7 @@ const Home = () => {
     .filter((message) => message.channelId === activeChannel.id);
   const username = getUsername();
   const [sendButtonDisabled, setSendButtonDisabled] = useState(false);
+  const { t, i18n } = useTranslation('translation', { keyPrefix: 'chatPage' })
 
   const formik = useFormik({
     initialValues: {
@@ -132,7 +132,7 @@ const Home = () => {
       <div className="row h-100 bg-white flex-md-row">
         <div className="col-4 col-md-2 border-end pt-5 px-0 bg-light">
           <div className="d-flex justify-content-between mb-2 ps-4 pe-2">
-            <span>Channels</span>
+            <span>{t('channelsHeader')}</span>
             <Button
               variant="outline-primary"
               className="p-0 text-primary"
@@ -145,7 +145,7 @@ const Home = () => {
           <div className="d-flex flex-column h-100">
             <div className="bg-light mb-4 p-3 shadow-sm small">
               <p className="m-0"><b># {activeChannel.name}</b></p>
-              <span className="text-muted">{channelMessages.length}</span>
+              <span className="text-muted">{t('messagesCounter', { counter: channelMessages.length })}</span>
             </div>
             <div className="chat-messages overflow-auto px-5" id="message-box">
               {channelMessages.map((message) => renderMessage(message))}
@@ -160,7 +160,7 @@ const Home = () => {
                     className="border-0 p-0 ps-2 form-control"
                     name="body"
                     aria-label="New message"
-                    placeholder="Type your message..."
+                    placeholder={t('messagesInputPlaceholder')}
                     autoComplete="off"
                   />
                   <Button

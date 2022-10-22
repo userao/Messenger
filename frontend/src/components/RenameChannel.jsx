@@ -8,6 +8,7 @@ import { useRef, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import useAuth from '../hooks/useAuth.js';
 import cn from 'classnames';
+import { useTranslation } from 'react-i18next';
 
 const RenameChannel = ({ handleClose }) => {
   const channelNameInput = useRef(null);
@@ -17,6 +18,7 @@ const RenameChannel = ({ handleClose }) => {
   const { socket } = useAuth();
   const inputClasses = cn('mb-2', { 'is-invalid': isChannelExists });
   const modal = useSelector((state) => state.modal.displayedModal);
+  const { t } = useTranslation('translation', { keyPrefix: 'renameChannelModal' });
 
   const handleSubmit = (values) => {
     const { newName } = values;
@@ -41,13 +43,13 @@ const RenameChannel = ({ handleClose }) => {
   return (
   <>
     <Modal.Header closeButton>
-      <Modal.Title>Rename channel</Modal.Title>
+      <Modal.Title>{t('header')}</Modal.Title>
     </Modal.Header>
     <Modal.Body>
       <Form onSubmit={formik.handleSubmit}>
         <div>
           <Form.Group>
-            <Form.Label visuallyHidden>New name</Form.Label>
+            <Form.Label visuallyHidden>{t('label')}</Form.Label>
             <Form.Control
               ref={channelNameInput}
               required
@@ -59,15 +61,15 @@ const RenameChannel = ({ handleClose }) => {
               className={inputClasses}
             />
             {isChannelExists 
-              ? <div className="invalid-feedback">Channel name must be unique</div>
+              ? <div className="invalid-feedback">{t('invalidFeedback')}</div>
               : null}
           </Form.Group>
           <div className="d-flex justify-content-end">
             <Button variant="secondary" onClick={handleClose} className="me-2">
-              Close
+              {t('closeButton')}
             </Button>
             <Button variant="primary" type="submit">
-              Rename
+              {t('addButton')}
             </Button>
           </div>
         </div>

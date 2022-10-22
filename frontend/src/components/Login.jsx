@@ -9,15 +9,17 @@ import axios from 'axios';
 import routes from '../routes.js';
 import cn from 'cn';
 import useAuth from '../hooks/useAuth.js';
+import { useTranslation } from 'react-i18next';
 
 const LoginForm = () => {
   const usernameInput = useRef(null);
   useEffect(() => usernameInput.current.focus(), []);
-  const [loginState, setLoginState] = useState(null);
+  const [loginState, setLoginState] = useState('idle');
   const context = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const redirectPath = location.state ? location.state.from.pathname : '/';
+  const { t, i18n } = useTranslation('translation', { keyPrefix: 'loginPage' });
 
   const handleSubmit = (values) => {
     const auth = {
@@ -54,11 +56,11 @@ const LoginForm = () => {
           <div className="card shadow-sm">
             <div className="card-body d-flex flex-column flex-md-row justify-content-around align-items-center p-5">
               <Form className="w-50" onSubmit={formik.handleSubmit}>
-                <h1 className="text-center mb-4">Login</h1>
+                <h1 className="text-center mb-4">{t('header')}</h1>
                 <Form.Group className="mb-3">
                   <FloatingLabel
                     className="mb-3"
-                    label="Your username"
+                    label={t('usernameLabel')}
                     htmlFor="username"
                   >
                     <Form.Control
@@ -67,7 +69,6 @@ const LoginForm = () => {
                       id="username"
                       name="username"
                       type="username"
-                      placeholder="Enter username"
                       onChange={formik.handleChange}
                       value={formik.values.username}
                       className={loginState === 'error' ? 'is-invalid' : null}
@@ -78,7 +79,7 @@ const LoginForm = () => {
                 <Form.Group className="mb-3">
                   <FloatingLabel
                     className="mb-3"
-                    label="Your password"
+                    label={t('passwordLabel')}
                     htmlFor="password"
                   >
                     <Form.Control
@@ -86,24 +87,23 @@ const LoginForm = () => {
                       id="password"
                       name="password"
                       type="password"
-                      placeholder="Enter password"
                       onChange={formik.handleChange}
                       value={formik.values.password}
                       className={loginState === 'error' ? 'is-invalid' : null}
                     />
                     {loginState === 'success' && navigate(redirectPath)}
                     {loginState === 'error'
-                      ? <div className="invalid-tooltip">Invalid username or password</div>
+                      ? <div className="invalid-tooltip">{t('invalidTooltip')}</div>
                       : null}
                   </FloatingLabel>
                 </Form.Group>
-                <Button className="w-100" disabled={loginState === 'requesting'} variant="primary" type="submit">Submit</Button>
+                <Button className="w-100" disabled={loginState === 'requesting'} variant="primary" type="submit">{t('logInButton')}</Button>
               </Form>
             </div>
             <div className="card-footer p-4">
               <div className="text-center">
-                <span>Don't have an account yet?</span>
-                <a href="/signup">Register</a>
+                <span>{t('footerText')} </span>
+                <a href="/signup">{t('registerLink')}</a>
               </div>
             </div>
           </div>

@@ -8,6 +8,7 @@ import { useRef, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import useAuth from '../hooks/useAuth.js';
 import cn from 'classnames';
+import { useTranslation } from 'react-i18next';
 
 const AddChannel = ({ handleClose }) => {
   const channelNameInput = useRef(null);
@@ -16,6 +17,7 @@ const AddChannel = ({ handleClose }) => {
   const [isChannelExists, setChannelExistence] = useState(null);
   const { socket } = useAuth();
   const inputClasses = cn('mb-2', { 'is-invalid': isChannelExists });
+  const { t } = useTranslation('translation', { keyPrefix: 'addChannelModal' });
 
   const handleSubmit = (values) => {
     const { channelName } = values;
@@ -40,13 +42,13 @@ const AddChannel = ({ handleClose }) => {
   return (
   <>
     <Modal.Header closeButton>
-      <Modal.Title>Add channel</Modal.Title>
+      <Modal.Title>{t('header')}</Modal.Title>
     </Modal.Header>
     <Modal.Body>
       <Form onSubmit={formik.handleSubmit}>
         <div>
           <Form.Group>
-            <Form.Label visuallyHidden>New channel name</Form.Label>
+            <Form.Label visuallyHidden>{t('label')}</Form.Label>
             <Form.Control
               ref={channelNameInput}
               required
@@ -58,15 +60,15 @@ const AddChannel = ({ handleClose }) => {
               className={inputClasses}
             />
             {isChannelExists 
-              ? <div className="invalid-feedback">Channel name must be unique</div>
+              ? <div className="invalid-feedback">{t('invalidFeedback')}</div>
               : null}
           </Form.Group>
           <div className="d-flex justify-content-end">
             <Button variant="secondary" onClick={handleClose} className="me-2">
-              Close
+              {t('closeButton')}
             </Button>
             <Button variant="primary" type="submit">
-              Add
+              {t('addButton')}
             </Button>
           </div>
         </div>
