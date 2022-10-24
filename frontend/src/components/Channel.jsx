@@ -5,6 +5,9 @@ import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import Dropdown from 'react-bootstrap/Dropdown';
 import { actions as modalActions } from '../slices/modalSlice';
 import { useDispatch } from 'react-redux';
+import filter  from 'leo-profanity';
+
+filter.loadDictionary('ru');
 
 const Channel = ({ channel, handleSelect }) => {
   const variant = channel.active ? 'secondary' : 'light';
@@ -16,7 +19,7 @@ const Channel = ({ channel, handleSelect }) => {
       <Dropdown as={ButtonGroup} className="d-flex">
         <Button onClick={() => handleSelect(channel.id)} variant={variant} className="w-100 rounded-0 text-start text-truncate">
           <span className="me-1">#</span>
-          {channel.name}
+          {filter.clean(channel.name)}
         </Button>
 
         <Dropdown.Toggle split variant={variant} id="dropdown-split-basic" className="flex-grow-0"/>
@@ -30,7 +33,7 @@ const Channel = ({ channel, handleSelect }) => {
     false: () => (
       <Button onClick={() => handleSelect(channel.id)} variant={variant} className='w-100 rounded-0 text-start'>
           <span className="me-1">#</span>
-          {channel.name}
+          {filter.clean(channel.name)}
         </Button>
     ),
   }

@@ -2,7 +2,7 @@ import React from 'react';
 import Nav from 'react-bootstrap/Nav';
 import { useDispatch } from 'react-redux';
 import { actions as channelsActions } from '../slices/channelsSlice';
-import Channel from './Channel.jsx'
+import Channel from './Channel.jsx';
 
 const Channels = ({ channels }) => {
   const dispatch = useDispatch();

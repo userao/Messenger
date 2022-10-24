@@ -21,7 +21,9 @@ import Channels from './Channels.jsx';
 import { useTranslation } from 'react-i18next';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import filter  from 'leo-profanity';
 
+filter.loadDictionary('ru');
 // TODO разобраться с множественными числами в i18n
 
 const getAuthHeader = () => {
@@ -56,7 +58,7 @@ const getNormalized = (data) => {
 const renderMessage = (message) => {
   return (
     <div key={message.id} className="text-break mb-2">
-      <b>{message.username}</b>: {message.body}
+      <b>{message.username}</b>: {filter.clean(message.body)}
     </div>
   )
 }
