@@ -20,7 +20,7 @@ import NotFound from './NotFound.jsx';
 import AuthContext from '../context/AuthContext.js';
 import useAuth from '../hooks/useAuth.js';
 import ModalWindow from './ModalWindow.jsx';
-import io from 'socket.io-client';
+import io  from 'socket.io-client';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 

@@ -19,6 +19,10 @@ import cn from 'classnames';
 import { useFormik } from 'formik';
 import Channels from './Channels.jsx';
 import { useTranslation } from 'react-i18next';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+// TODO разобраться с множественными числами в i18n
 
 const getAuthHeader = () => {
   const user = JSON.parse(localStorage.getItem('user'));
@@ -98,17 +102,27 @@ const Home = () => {
     socket.on('newChannel', (payload) => {
       dispatch(channelsActions.addChannel(payload));
       dispatch(channelsActions.setActiveChannel(payload.id));
+      dispatch(modalActions.setDisplayedModal({ type: null }));
+      toast.success(t('toastifyChannelCreated'));
     });
 
     socket.on('renameChannel', (payload) => {
       console.log('renaming channel')
       dispatch(channelsActions.renameChannel(payload));
+      dispatch(modalActions.setDisplayedModal({ type: null }));
+      toast.success(t('toastifyChannelRenamed'));
     });
 
     socket.on('removeChannel', (payload) => {
       dispatch(channelsActions.setActiveChannel(1));
       dispatch(channelsActions.removeChannel(payload.id));
+      dispatch(modalActions.setDisplayedModal({ type: null }));
+      toast.success(t('toastifyChannelDeleted'));
     });
+
+    socket.on('disconnect', () => {
+      toast.error(t('toastifyConnectionError'), { autoClose: false });
+    })
   }, [socket]);
 
 
@@ -157,7 +171,7 @@ const Home = () => {
                     ref={messageInput}
                     onChange={formik.handleChange}
                     value={formik.values.body}
-                    className="border-0 p-0 ps-2 form-control"
+                    className="border-0 p-0 ps-2"
                     name="body"
                     aria-label="New message"
                     placeholder={t('messagesInputPlaceholder')}
@@ -166,7 +180,7 @@ const Home = () => {
                   <Button
                     type="submit"
                     disabled={sendButtonDisabled}
-                    className="btn btn-group-vertical"
+                    className="btn-group-vertical"
                   />
                 </div>
               </Form>
@@ -174,6 +188,7 @@ const Home = () => {
           </div>
         </div>
       </div>
+      <ToastContainer />
     </div>
   )
 };

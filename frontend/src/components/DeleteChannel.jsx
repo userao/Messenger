@@ -12,11 +12,12 @@ import { useTranslation } from 'react-i18next';
 const RenameChannel = ({ handleClose }) => {
   const { socket } = useAuth();
   const modal = useSelector((state) => state.modal.displayedModal);
+  const [isDisabled, setDisabled] = useState(false);
   const { t } = useTranslation('translation', { keyPrefix: 'deleteChannelModal' });
 
   const handleSubmit = () => {
     socket.emit('removeChannel', { id: modal.channelId });
-    handleClose();
+    setDisabled(true);
   };
 
   return (
@@ -27,10 +28,10 @@ const RenameChannel = ({ handleClose }) => {
     <Modal.Body>
       <p className="lead">{t('body')}</p>
       <div className="d-flex justify-content-end">
-      <Button variant="secondary" onClick={handleClose} className="me-2">
+      <Button variant="secondary" onClick={handleClose} className="me-2" disabled={isDisabled}>
           {t('closeButton')}
       </Button>
-      <Button variant="danger" type="submit" onClick={handleSubmit}>
+      <Button variant="danger" type="submit" onClick={handleSubmit} disabled={isDisabled}>
           {t('deleteButton')}
       </Button>
       </div>

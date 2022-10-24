@@ -9,35 +9,39 @@ import { useSelector } from 'react-redux';
 import useAuth from '../hooks/useAuth.js';
 import cn from 'classnames';
 import { useTranslation } from 'react-i18next';
+import * as yup from 'yup';
 
 const AddChannel = ({ handleClose }) => {
   const channelNameInput = useRef(null);
   useEffect(() => channelNameInput.current.focus());
   const channels = useSelector(channelsSelectors.selectAll);
-  const [isChannelExists, setChannelExistence] = useState(null);
+  const [isDisabled, setDisabled] = useState(false);
   const { socket } = useAuth();
-  const inputClasses = cn('mb-2', { 'is-invalid': isChannelExists });
   const { t } = useTranslation('translation', { keyPrefix: 'addChannelModal' });
 
   const handleSubmit = (values) => {
     const { channelName } = values;
-    const isExisting = !!channels.find((channel) => channel.name === channelName);
-
-    setChannelExistence(isExisting);
-    
-    if (!isExisting) {
-      socket.emit('newChannel', { name: channelName });
-      handleClose();
-    }
+      socket.emit('newChannel', { name: channelName.trim() });
+      setDisabled(true);
   };
 
   const formik = useFormik({
     initialValues: {
       channelName: '',
     },
+    validationSchema: yup.object({
+      channelName: yup.string()
+      .trim()
+      .min(3, t('invalidLengthError'))
+      .max(20, t('invalidLengthError'))
+      .notOneOf(channels.map((channel) => channel.name), t('notUniqueError'))
+    }),
+    validateOnChange: false,
+    validateOnBlur: false,
     onSubmit: (values) => handleSubmit(values),
   });
 
+  const inputClasses = cn('mb-2', { 'is-invalid': formik.errors.channelName });
 
   return (
   <>
@@ -58,16 +62,17 @@ const AddChannel = ({ handleClose }) => {
               onChange={formik.handleChange}
               value={formik.values.username}
               className={inputClasses}
+              disabled={isDisabled}
             />
-            {isChannelExists 
-              ? <div className="invalid-feedback">{t('invalidFeedback')}</div>
+            {formik.errors.channelName
+              ? <div className="invalid-feedback">{formik.errors.channelName}</div>
               : null}
           </Form.Group>
           <div className="d-flex justify-content-end">
-            <Button variant="secondary" onClick={handleClose} className="me-2">
+            <Button variant="secondary" onClick={handleClose} className="me-2" disabled={isDisabled}>
               {t('closeButton')}
             </Button>
-            <Button variant="primary" type="submit">
+            <Button variant="primary" type="submit" disabled={isDisabled}>
               {t('addButton')}
             </Button>
           </div>

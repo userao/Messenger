@@ -20,6 +20,7 @@ const resources = {
         invalidTooltip: 'Неверные имя пользователя или пароль',
         registerLink: 'Регистрация',
         footerText: 'Нет аккаунта?',
+        toastifyconnectionError: 'Ошибка соединения',
       },
       signupPage: {
         header: 'Регистрация',
@@ -37,13 +38,18 @@ const resources = {
         channelsHeader: 'Каналы',
         messagesCounter: '{{counter}} сообщений',
         messagesInputPlaceholder: 'Введите сообщение...',
+        toastifyChannelCreated: 'Канал создан!',
+        toastifyChannelRenamed: 'Канал переименован!',
+        toastifyChannelDeleted: 'Канал удален!',
+        toastifyConnectionError: 'Ошибка соединения',
       },
       addChannelModal: {
         header: 'Добавить канал',
         label: 'Имя канала',
         addButton: 'Отправить',
         closeButton: 'Отменить',
-        invalidFeedback: 'Должно быть уникальным',
+        notUniqueError: 'Должно быть уникальным',
+        invalidLengthError: 'От 3 до 20 символов',
       },
       renameChannelModal: {
         header: 'Переименовать канал',
@@ -51,6 +57,8 @@ const resources = {
         addButton: 'Отправить',
         closeButton: 'Отменить',
         invalidFeedback: 'Должно быть уникальным',
+        notUniqueError: 'Должно быть уникальным',
+        invalidLengthError: 'От 3 до 20 символов',
       },
       deleteChannelModal: {
         header: 'Удалить канал',

@@ -3,13 +3,13 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import Form from 'react-bootstrap/Form';
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Button from 'react-bootstrap/Button';
-import * as yup from 'yup';
 import { useFormik } from 'formik';
 import axios from 'axios';
 import routes from '../routes.js';
-import cn from 'cn';
 import useAuth from '../hooks/useAuth.js';
 import { useTranslation } from 'react-i18next';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const LoginForm = () => {
   const usernameInput = useRef(null);
@@ -19,7 +19,7 @@ const LoginForm = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const redirectPath = location.state ? location.state.from.pathname : '/';
-  const { t, i18n } = useTranslation('translation', { keyPrefix: 'loginPage' });
+  const { t  } = useTranslation('translation', { keyPrefix: 'loginPage' });
 
   const handleSubmit = (values) => {
     const auth = {
@@ -37,7 +37,12 @@ const LoginForm = () => {
         setLoginState('success');
       })
       .catch((e) => {
-        setLoginState('error');
+        if (e.response.status === 401) {
+          setLoginState('incorrect data');
+        } else {
+          setLoginState('connection error')
+          toast.error(t('toastifyConnectionError'), { autoClose: false });
+        }
       });
   };
   
@@ -71,7 +76,8 @@ const LoginForm = () => {
                       type="username"
                       onChange={formik.handleChange}
                       value={formik.values.username}
-                      className={loginState === 'error' ? 'is-invalid' : null}
+                      className={loginState === 'incorrect data' ? 'is-invalid' : null}
+                      disabled={loginState === 'requesting'}
                     />
                   </FloatingLabel>
                 </Form.Group>
@@ -89,10 +95,11 @@ const LoginForm = () => {
                       type="password"
                       onChange={formik.handleChange}
                       value={formik.values.password}
-                      className={loginState === 'error' ? 'is-invalid' : null}
+                      className={loginState === 'incorrect data' ? 'is-invalid' : null}
+                      disabled={loginState === 'requesting'}
                     />
                     {loginState === 'success' && navigate(redirectPath)}
-                    {loginState === 'error'
+                    {loginState === 'incorrect data'
                       ? <div className="invalid-tooltip">{t('invalidTooltip')}</div>
                       : null}
                   </FloatingLabel>
@@ -109,6 +116,7 @@ const LoginForm = () => {
           </div>
         </div>
       </div>
+      <ToastContainer />
     </div>
   );
 };
