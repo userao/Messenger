@@ -2,15 +2,13 @@ import React, { useState } from 'react';
 import Form from 'react-bootstrap/Form';
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Button from 'react-bootstrap/Button';
-import { useSelector, useDispatch } from 'react-redux';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
-import keyBy from 'lodash/keyBy.js';
-import routes from '../routes.js';
 import axios from 'axios';
-import useAuth from '../hooks/useAuth.js';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import useAuth from '../hooks/useAuth.js';
+import routes from '../routes.js';
 
 const SignupForm = () => {
   const [signupState, setSignupState] = useState('idle');
@@ -18,7 +16,7 @@ const SignupForm = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const redirectPath = location.state ? location.state.from.pathname : '/';
-  const { t, i18n } = useTranslation('translation', { keyPrefix: 'signupPage' });
+  const { t } = useTranslation('translation', { keyPrefix: 'signupPage' });
 
   const handleSubmit = (values) => {
     const { username, password } = values;
@@ -34,7 +32,7 @@ const SignupForm = () => {
       .catch((e) => {
         console.log(e);
         setSignupState('error');
-      })
+      });
   };
 
   const formik = useFormik({
@@ -58,7 +56,7 @@ const SignupForm = () => {
           t('confirmationMustMatch'),
         )
         .required(t('requiredField')),
-      }),
+    }),
     onSubmit: (values) => handleSubmit(values),
   });
 
@@ -92,8 +90,8 @@ const SignupForm = () => {
                     />
                     {
                       formik.touched.username && formik.errors.username
-                      ? <div className="invalid-tooltip">{formik.errors.username}</div>
-                      : null
+                        ? <div className="invalid-tooltip">{formik.errors.username}</div>
+                        : null
                     }
                   </FloatingLabel>
                 </Form.Group>
@@ -120,8 +118,8 @@ const SignupForm = () => {
                     />
                     {
                       formik.touched.password && formik.errors.password
-                      ? <div className="invalid-tooltip">{formik.errors.password}</div>
-                      : null
+                        ? <div className="invalid-tooltip">{formik.errors.password}</div>
+                        : null
                     }
                   </FloatingLabel>
                 </Form.Group>
@@ -147,9 +145,9 @@ const SignupForm = () => {
                       }
                     />
                     {
-                      formik.touched.passwordConfirmation && formik.errors.passwordConfirmation 
-                      ? <div className="invalid-tooltip">{formik.errors.passwordConfirmation}</div>
-                      : null
+                      formik.touched.passwordConfirmation && formik.errors.passwordConfirmation
+                        ? <div className="invalid-tooltip">{formik.errors.passwordConfirmation}</div>
+                        : null
                     }
                     {signupState === 'error' && <div className="invalid-tooltip">{t('signupError')}</div>}
                     {signupState === 'success' && navigate(redirectPath)}

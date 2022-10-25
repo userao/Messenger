@@ -1,11 +1,10 @@
 import React from 'react';
 import Modal from 'react-bootstrap/Modal';
+import { useDispatch } from 'react-redux';
 import AddChannel from './AddChannel.jsx';
 import RenameChannel from './RenameChannel.jsx';
 import DeleteChannel from './DeleteChannel.jsx';
-import { useDispatch } from 'react-redux';
 import { actions as modalActions } from '../slices/modalSlice.js';
-
 
 const ModalWindow = ({ displayedModal }) => {
   if (!displayedModal.type) return null;
@@ -20,13 +19,13 @@ const ModalWindow = ({ displayedModal }) => {
     adding: AddChannel,
     renaming: RenameChannel,
     deleting: DeleteChannel,
-  }
+  };
 
-  const ModalWindow = modalTypes[displayedModal.type];
+  const Window = modalTypes[displayedModal.type];
 
   return (
-    <Modal centered show={true} onHide={handleClose}>
-      <ModalWindow handleClose={handleClose} />
+    <Modal centered show onHide={handleClose}>
+      <Window handleClose={handleClose} />
     </Modal>
   );
 };

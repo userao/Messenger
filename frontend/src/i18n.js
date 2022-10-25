@@ -7,6 +7,10 @@ import { initReactI18next } from 'react-i18next';
 const resources = {
   ru: {
     translation: {
+      notFoundPage: {
+        header: 'Страница не найдена',
+        linkToMain: 'Вернуться на главную',
+      },
       navbar: {
         brand: 'Hexlet chat',
         logInButton: 'Войти',
@@ -15,7 +19,7 @@ const resources = {
       loginPage: {
         header: 'Войти',
         usernameLabel: 'Ваш ник',
-        passwordLabel: 'Ваш пароль',
+        passwordLabel: 'Пароль',
         logInButton: 'Войти',
         invalidTooltip: 'Неверные имя пользователя или пароль',
         registerLink: 'Регистрация',
@@ -32,7 +36,7 @@ const resources = {
         usernameInvalidLength: 'От 3 до 20 символов',
         requiredField: 'Обязательное поле',
         passwordTooShort: 'Не менее 6 символов',
-        confirmationMustMatch: 'Должно совпадать с паролем',
+        confirmationMustMatch: 'Пароли должны совпадать',
       },
       chatPage: {
         channelsHeader: 'Каналы',
@@ -74,10 +78,10 @@ i18n
   .use(initReactI18next)
   .init({
     resources,
-    lng: "ru",
+    lng: 'ru',
     interpolation: {
-      escapeValue: false
-    }
+      escapeValue: false,
+    },
   });
 
-  export default i18n;
+export default i18n;

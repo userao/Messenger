@@ -1,18 +1,15 @@
+/* eslint-disable react/jsx-no-constructed-context-values */
 import React, { useState } from 'react';
 import {
   BrowserRouter as Router,
   Routes,
   Route,
-  Link,
   Navigate,
   useLocation,
 } from 'react-router-dom';
-import {
-  Container,
-  Nav,
-  Navbar,
-  Button,
-} from 'react-bootstrap';
+import io from 'socket.io-client';
+import { useSelector } from 'react-redux';
+import { Provider, ErrorBoundary } from '@rollbar/react';
 import Chat from './Chat.jsx';
 import LoginForm from './Login.jsx';
 import SignupForm from './Signup.jsx';
@@ -20,9 +17,13 @@ import NotFound from './NotFound.jsx';
 import AuthContext from '../context/AuthContext.js';
 import useAuth from '../hooks/useAuth.js';
 import ModalWindow from './ModalWindow.jsx';
-import io  from 'socket.io-client';
-import { useSelector } from 'react-redux';
-import { useTranslation } from 'react-i18next';
+import MainContainer from './MainContainer.jsx';
+import Navigation from './Navigation.jsx';
+
+const rollbarConfig = {
+  accessToken: 'POST_CLIENT_ITEM_ACCESS_TOKEN',
+  environment: 'production',
+};
 
 const socket = io.connect();
 
@@ -36,7 +37,13 @@ const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ loggedIn, logIn, logOut, socket }}>
+    <AuthContext.Provider value={{
+      loggedIn,
+      logIn,
+      logOut,
+      socket,
+    }}
+    >
       {children}
     </AuthContext.Provider>
   );
@@ -51,39 +58,14 @@ const ChatRoute = ({ children }) => {
   );
 };
 
-
-
-const App = () => {
-  const { t } = useTranslation('translation', { keyPrefix: 'navbar' });
-
-  const AuthButton = () => {
-    const auth = useAuth();
-    const location = useLocation();
-  
-    const buttonTypes = {
-      true: () => <Button onClick={auth.logOut}>{t('logOutButton')}</Button>,
-      false: () => {
-        if (location.pathname === '/login') return null;
-        return <Button href="/login" state={{ from: location }}>{t('logInButton')}</Button>;
-      },
-    };
-    const buttonElement = buttonTypes[auth.loggedIn]();
-  
-    return buttonElement;
-  };
-
-  return (
-    <AuthProvider>
-      <ModalWindow displayedModal={useSelector((state) => state.modal.displayedModal)} />
-      <div className="h-100" id="chat">
-        <div className="d-flex flex-column h-100">
+const App = () => (
+  <Provider config={rollbarConfig}>
+    <ErrorBoundary>
+      <AuthProvider>
+        <ModalWindow displayedModal={useSelector((state) => state.modal.displayedModal)} />
+        <MainContainer>
           <Router>
-            <Navbar className="shadow-sm" bg="light" expand="lg">
-              <Container>
-                <Navbar.Brand href="/">{t('brand')}</Navbar.Brand>
-                <AuthButton />
-              </Container>
-            </Navbar>
+            <Navigation />
 
             <Routes>
               <Route exact path="/login" element={<LoginForm />} />
@@ -100,10 +82,10 @@ const App = () => {
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Router>
-        </div>
-      </div>
-    </AuthProvider>
-  )
-};
+        </MainContainer>
+      </AuthProvider>
+    </ErrorBoundary>
+  </Provider>
+);
 
 export default App;

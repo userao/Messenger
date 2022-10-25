@@ -1,24 +1,27 @@
-import { createEntityAdapter, createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
-import _ from 'lodash';
-import routes from '../routes.js';
+/* eslint-disable no-param-reassign */
+import { createEntityAdapter, createSlice } from '@reduxjs/toolkit';
 import { actions as channelsActions } from './channelsSlice.js';
 
 const messagesAdapter = createEntityAdapter();
 
 const messagesSlice = createSlice({
   name: 'messages',
-  initialState: messagesAdapter.getInitialState(),
+  initialState: messagesAdapter.getInitialState({
+    fetchingStatus: 'idle',
+  }),
   reducers: {
     addMessage: messagesAdapter.addOne,
     addMessages: messagesAdapter.addMany,
+    setFetchingStatus: (state, { payload }) => {
+      state.fetchingStatus = payload;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(channelsActions.removeChannel, (state, { payload }) => {
       const idsToDelete = state.ids.filter((id) => state.entities[id].channelId === payload);
       messagesAdapter.removeMany(state, idsToDelete);
     });
-  }
+  },
 });
 
 export const { actions } = messagesSlice;

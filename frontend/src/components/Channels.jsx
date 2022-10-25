@@ -13,9 +13,11 @@ const Channels = ({ channels }) => {
 
   return (
     <Nav variant="pills" activeKey="1" className="flex-column px-2">
-      {channels.map((channel) => <Channel key={channel.id} channel={channel} handleSelect={handleSelect}/>)}
+      {channels.map((channel) => (
+        <Channel key={channel.id} channel={channel} handleSelect={handleSelect} />
+      ))}
     </Nav>
-  )
+  );
 };
 
 export default Channels;

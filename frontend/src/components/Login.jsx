@@ -1,14 +1,14 @@
-import { React, useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Form from 'react-bootstrap/Form';
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Button from 'react-bootstrap/Button';
 import { useFormik } from 'formik';
 import axios from 'axios';
-import routes from '../routes.js';
-import useAuth from '../hooks/useAuth.js';
 import { useTranslation } from 'react-i18next';
 import { ToastContainer, toast } from 'react-toastify';
+import routes from '../routes.js';
+import useAuth from '../hooks/useAuth.js';
 import 'react-toastify/dist/ReactToastify.css';
 
 const LoginForm = () => {
@@ -19,7 +19,7 @@ const LoginForm = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const redirectPath = location.state ? location.state.from.pathname : '/';
-  const { t  } = useTranslation('translation', { keyPrefix: 'loginPage' });
+  const { t } = useTranslation('translation', { keyPrefix: 'loginPage' });
 
   const handleSubmit = (values) => {
     const auth = {
@@ -40,12 +40,12 @@ const LoginForm = () => {
         if (e.response.status === 401) {
           setLoginState('incorrect data');
         } else {
-          setLoginState('connection error')
+          setLoginState('connection error');
           toast.error(t('toastifyConnectionError'), { autoClose: false });
         }
       });
   };
-  
+
   const formik = useFormik({
     initialValues: {
       username: '',
@@ -109,7 +109,10 @@ const LoginForm = () => {
             </div>
             <div className="card-footer p-4">
               <div className="text-center">
-                <span>{t('footerText')} </span>
+                <span>
+                  {t('footerText')}
+                </span>
+                {' '}
                 <a href="/signup">{t('registerLink')}</a>
               </div>
             </div>

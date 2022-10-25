@@ -1,6 +1,5 @@
-import { createEntityAdapter, createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
-import _ from 'lodash';
+/* eslint-disable no-param-reassign */
+import { createSlice } from '@reduxjs/toolkit';
 
 const modalSlice = createSlice({
   name: 'modal',
@@ -14,7 +13,7 @@ const modalSlice = createSlice({
     setDisplayedModal: (state, { payload }) => {
       state.displayedModal = { ...state.displayedModal, ...payload };
     },
-  }
+  },
 });
 
 export const { actions } = modalSlice;
