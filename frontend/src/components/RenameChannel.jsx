@@ -15,6 +15,7 @@ const RenameChannel = ({ handleClose }) => {
   useEffect(() => channelNameInput.current.focus(), []);
   const modal = useSelector((state) => state.modal.displayedModal);
   const channels = useSelector(channelsSelectors.selectAll);
+  const renamedChannel = channels.find((channel) => channel.id === modal.channelId);
   const { socket } = useAuth();
 
   const [isDisabled, setDisabled] = useState(false);
@@ -28,7 +29,7 @@ const RenameChannel = ({ handleClose }) => {
 
   const formik = useFormik({
     initialValues: {
-      newName: '',
+      newName: renamedChannel.name,
     },
     validationSchema: yup.object({
       newName: yup.string()
@@ -58,12 +59,12 @@ const RenameChannel = ({ handleClose }) => {
               id="newName"
               name="newName"
               onChange={formik.handleChange}
-              value={formik.values.username}
+              value={formik.values.newName}
               className={inputClasses}
               disabled={isDisabled}
             />
             <Form.Label visuallyHidden htmlFor="newName">{t('label')}</Form.Label>
-            <div className="invalid-feedback">{t('invalidFeedback')}</div>
+            <div className="invalid-feedback">{formik.errors.newName}</div>
             <div className="d-flex justify-content-end">
               <Button variant="secondary" onClick={handleClose} className="me-2" disabled={isDisabled}>
                 {t('closeButton')}
