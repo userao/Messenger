@@ -42,6 +42,8 @@ const resources = {
         channelsHeader: 'Каналы',
         messagesCounter: '{{counter}} сообщений',
         messagesInputPlaceholder: 'Введите сообщение...',
+        ariaLabel: 'Новое сообщение',
+        sendMessageSpan: 'Отправить сообщение',
         toastifyChannelCreated: 'Канал создан!',
         toastifyChannelRenamed: 'Канал переименован!',
         toastifyChannelDeleted: 'Канал удален!',
