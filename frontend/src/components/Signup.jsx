@@ -60,6 +60,7 @@ const SignupForm = () => {
         )
         .required(t('requiredField')),
     }),
+    validateOnChange: false,
     onSubmit: (values) => handleSubmit(values),
   });
 
@@ -73,12 +74,11 @@ const SignupForm = () => {
                 <h1 className="text-center mb-4">{t('header')}</h1>
                 <Form.Group className="mb-3">
                   <FloatingLabel
-                    className="mb-3"
+                    controlId="floatingInput"
                     label={t('usernameLabel')}
-                    htmlFor="username"
+                    className="mb-3"
                   >
                     <Form.Control
-                      required
                       ref={usernameInput}
                       id="username"
                       name="username"
@@ -86,6 +86,7 @@ const SignupForm = () => {
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                       value={formik.values.username}
+                      placeholder={t('usernameInvalidLength')}
                       className={
                         (formik.touched.username && formik.errors.username) || signupState === 'error'
                           ? 'is-invalid'
@@ -102,18 +103,17 @@ const SignupForm = () => {
 
                 <Form.Group className="mb-3">
                   <FloatingLabel
-                    className="mb-3"
+                    controlId="floatingPassword"
                     label={t('passwordLabel')}
-                    htmlFor="password"
                   >
                     <Form.Control
-                      required
                       id="password"
                       name="password"
                       type="password"
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                       value={formik.values.password}
+                      placeholder={t('passwordTooShort')}
                       className={
                         (formik.touched.password && formik.errors.password) || signupState === 'error'
                           ? 'is-invalid'
@@ -130,18 +130,17 @@ const SignupForm = () => {
 
                 <Form.Group className="mb-3">
                   <FloatingLabel
-                    className="mb-3"
+                    controlId="floatingPassword"
                     label={t('passwordConfirmationLabel')}
-                    htmlFor="passwordConfirmation"
                   >
                     <Form.Control
-                      required
                       id="passwordConfirmation"
                       name="passwordConfirmation"
                       type="password"
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
-                      value={formik.values.repeatPassword}
+                      value={formik.values.passwordConfirmation}
+                      placeholder={t('confirmationMustMatch')}
                       className={
                         (formik.touched.passwordConfirmation && formik.errors.passwordConfirmation) || signupState === 'error'
                           ? 'is-invalid'
