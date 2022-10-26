@@ -49,7 +49,7 @@ const resources = {
         deleteButtonSpan: 'Удалить',
         toastifyChannelCreated: 'Канал создан!',
         toastifyChannelRenamed: 'Канал переименован!',
-        toastifyChannelDeleted: 'Канал удален!',
+        toastifyChannelDeleted: 'Канал удалён!',
         toastifyConnectionError: 'Ошибка соединения',
       },
       addChannelModal: {
