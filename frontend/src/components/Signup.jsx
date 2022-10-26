@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Form from 'react-bootstrap/Form';
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Button from 'react-bootstrap/Button';
@@ -15,8 +15,11 @@ const SignupForm = () => {
   const context = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+  const usernameInput = useRef(null);
   const redirectPath = location.state ? location.state.from.pathname : '/';
   const { t } = useTranslation('translation', { keyPrefix: 'signupPage' });
+
+  useEffect(() => usernameInput?.current.focus());
 
   const handleSubmit = (values) => {
     const { username, password } = values;
@@ -76,6 +79,7 @@ const SignupForm = () => {
                   >
                     <Form.Control
                       required
+                      ref={usernameInput}
                       id="username"
                       name="username"
                       type="username"
