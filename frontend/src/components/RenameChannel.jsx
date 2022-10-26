@@ -12,7 +12,7 @@ import useAuth from '../hooks/useAuth.js';
 
 const RenameChannel = ({ handleClose }) => {
   const channelNameInput = useRef(null);
-  useEffect(() => channelNameInput.current.focus());
+  useEffect(() => channelNameInput.current.focus(), []);
   const modal = useSelector((state) => state.modal.displayedModal);
   const channels = useSelector(channelsSelectors.selectAll);
   const { socket } = useAuth();
@@ -52,23 +52,18 @@ const RenameChannel = ({ handleClose }) => {
       <Modal.Body>
         <Form onSubmit={formik.handleSubmit}>
           <div>
-            <Form.Group>
-              <Form.Label visuallyHidden>{t('label')}</Form.Label>
-              <Form.Control
-                ref={channelNameInput}
-                required
-                id="newName"
-                name="newName"
-                type="text"
-                onChange={formik.handleChange}
-                value={formik.values.username}
-                className={inputClasses}
-                disabled={isDisabled}
-              />
-              {formik.errors.newName
-                ? <div className="invalid-feedback">{t('invalidFeedback')}</div>
-                : null}
-            </Form.Group>
+            <Form.Control
+              ref={channelNameInput}
+              required
+              id="newName"
+              name="newName"
+              onChange={formik.handleChange}
+              value={formik.values.username}
+              className={inputClasses}
+              disabled={isDisabled}
+            />
+            <Form.Label visuallyHidden htmlFor="newName">{t('label')}</Form.Label>
+            <div className="invalid-feedback">{t('invalidFeedback')}</div>
             <div className="d-flex justify-content-end">
               <Button variant="secondary" onClick={handleClose} className="me-2" disabled={isDisabled}>
                 {t('closeButton')}
