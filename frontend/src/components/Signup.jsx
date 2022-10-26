@@ -19,7 +19,7 @@ const SignupForm = () => {
   const redirectPath = location.state ? location.state.from.pathname : '/';
   const { t } = useTranslation('translation', { keyPrefix: 'signupPage' });
 
-  useEffect(() => usernameInput?.current.focus(), []);
+  useEffect(() => usernameInput?.current.focus());
 
   const handleSubmit = (values) => {
     const { username, password } = values;
@@ -78,6 +78,7 @@ const SignupForm = () => {
                     htmlFor="username"
                   >
                     <Form.Control
+                      required
                       ref={usernameInput}
                       id="username"
                       name="username"
@@ -85,7 +86,6 @@ const SignupForm = () => {
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                       value={formik.values.username}
-                      placeholder={t('usernameInvalidLength')}
                       className={
                         (formik.touched.username && formik.errors.username) || signupState === 'error'
                           ? 'is-invalid'
@@ -107,10 +107,10 @@ const SignupForm = () => {
                     htmlFor="password"
                   >
                     <Form.Control
+                      required
                       id="password"
                       name="password"
                       type="password"
-                      placeholder={t('passwordTooShort')}
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                       value={formik.values.password}
@@ -135,10 +135,10 @@ const SignupForm = () => {
                     htmlFor="passwordConfirmation"
                   >
                     <Form.Control
+                      required
                       id="passwordConfirmation"
                       name="passwordConfirmation"
                       type="password"
-                      placeholder={t('confirmationMustMatch')}
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                       value={formik.values.repeatPassword}
