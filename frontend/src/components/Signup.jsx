@@ -19,7 +19,7 @@ const SignupForm = () => {
   const redirectPath = location.state ? location.state.from.pathname : '/';
   const { t } = useTranslation('translation', { keyPrefix: 'signupPage' });
 
-  useEffect(() => usernameInput?.current.focus());
+  useEffect(() => usernameInput?.current.focus(), []);
 
   const handleSubmit = (values) => {
     const { username, password } = values;
