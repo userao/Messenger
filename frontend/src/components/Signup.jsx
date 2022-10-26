@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Form from 'react-bootstrap/Form';
-import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Button from 'react-bootstrap/Button';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
@@ -72,90 +71,82 @@ const SignupForm = () => {
             <div className="card-body d-flex flex-column flex-md-row justify-content-around align-items-center p-5">
               <Form className="w-50" onSubmit={formik.handleSubmit}>
                 <h1 className="text-center mb-4">{t('header')}</h1>
-                <Form.Group className="mb-3">
-                  <FloatingLabel
-                    controlId="floatingInput"
-                    label={t('usernameLabel')}
-                    className="mb-3"
-                  >
-                    <Form.Control
-                      ref={usernameInput}
-                      id="username"
-                      name="username"
-                      type="username"
-                      onChange={formik.handleChange}
-                      onBlur={formik.handleBlur}
-                      value={formik.values.username}
-                      placeholder={t('usernameInvalidLength')}
-                      className={
-                        (formik.touched.username && formik.errors.username) || signupState === 'error'
-                          ? 'is-invalid'
-                          : null
-                      }
-                    />
-                    {
-                      formik.touched.username && formik.errors.username
-                        ? <div className="invalid-tooltip">{formik.errors.username}</div>
+                <Form.Floating
+                  className="mb-3"
+                >
+                  <Form.Control
+                    ref={usernameInput}
+                    id="username"
+                    name="username"
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    value={formik.values.username}
+                    placeholder={t('usernameInvalidLength')}
+                    className={
+                      (formik.touched.username && formik.errors.username) || signupState === 'error'
+                        ? 'is-invalid'
                         : null
                     }
-                  </FloatingLabel>
-                </Form.Group>
+                  />
+                  <label className="form-label" htmlFor="username">{t('usernameLabel')}</label>
+                  {
+                    formik.touched.username && formik.errors.username
+                      ? <div className="invalid-tooltip">{formik.errors.username}</div>
+                      : null
+                  }
+                </Form.Floating>
 
-                <Form.Group className="mb-3">
-                  <FloatingLabel
-                    controlId="floatingPassword"
-                    label={t('passwordLabel')}
-                  >
-                    <Form.Control
-                      id="password"
-                      name="password"
-                      type="password"
-                      onChange={formik.handleChange}
-                      onBlur={formik.handleBlur}
-                      value={formik.values.password}
-                      placeholder={t('passwordTooShort')}
-                      className={
-                        (formik.touched.password && formik.errors.password) || signupState === 'error'
-                          ? 'is-invalid'
-                          : null
-                      }
-                    />
-                    {
-                      formik.touched.password && formik.errors.password
-                        ? <div className="invalid-tooltip">{formik.errors.password}</div>
+                <Form.Floating
+                  className="mb-3"
+                >
+                  <Form.Control
+                    id="password"
+                    name="password"
+                    type="password"
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    value={formik.values.password}
+                    placeholder={t('passwordTooShort')}
+                    className={
+                      (formik.touched.password && formik.errors.password) || signupState === 'error'
+                        ? 'is-invalid'
                         : null
                     }
-                  </FloatingLabel>
-                </Form.Group>
+                  />
+                  <label className="form-label" htmlFor="password">{t('passwordLabel')}</label>
+                  {
+                    formik.touched.password && formik.errors.password
+                      ? <div className="invalid-tooltip">{formik.errors.password}</div>
+                      : null
+                  }
+                </Form.Floating>
 
-                <Form.Group className="mb-3">
-                  <FloatingLabel
-                    controlId="floatingPassword"
-                    label={t('passwordConfirmationLabel')}
-                  >
-                    <Form.Control
-                      id="passwordConfirmation"
-                      name="passwordConfirmation"
-                      type="password"
-                      onChange={formik.handleChange}
-                      onBlur={formik.handleBlur}
-                      value={formik.values.passwordConfirmation}
-                      placeholder={t('confirmationMustMatch')}
-                      className={
-                        (formik.touched.passwordConfirmation && formik.errors.passwordConfirmation) || signupState === 'error'
-                          ? 'is-invalid'
-                          : null
-                      }
-                    />
-                    {
-                      formik.touched.passwordConfirmation && formik.errors.passwordConfirmation
-                        ? <div className="invalid-tooltip">{formik.errors.passwordConfirmation}</div>
+                <Form.Floating
+                  className="mb-4"
+                >
+                  <Form.Control
+                    id="passwordConfirmation"
+                    name="passwordConfirmation"
+                    type="password"
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    value={formik.values.passwordConfirmation}
+                    placeholder={t('confirmationMustMatch')}
+                    className={
+                      (formik.touched.passwordConfirmation && formik.errors.passwordConfirmation) || signupState === 'error'
+                        ? 'is-invalid'
                         : null
                     }
-                    {signupState === 'error' && <div className="invalid-tooltip">{t('signupError')}</div>}
-                    {signupState === 'success' && navigate(redirectPath)}
-                  </FloatingLabel>
-                </Form.Group>
+                  />
+                  <label className="form-label" htmlFor="passwordConfirmation">{t('passwordConfirmationLabel')}</label>
+                  {
+                    formik.touched.passwordConfirmation && formik.errors.passwordConfirmation
+                      ? <div className="invalid-tooltip">{formik.errors.passwordConfirmation}</div>
+                      : null
+                  }
+                  {signupState === 'error' && <div className="invalid-tooltip">{t('signupError')}</div>}
+                  {signupState === 'success' && navigate(redirectPath)}
+                </Form.Floating>
                 <Button className="w-100" variant="outline-primary" type="submit">{t('registerButton')}</Button>
               </Form>
             </div>
