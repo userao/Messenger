@@ -85,6 +85,7 @@ const SignupForm = () => {
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                       value={formik.values.username}
+                      placeholder={t('usernameInvalidLength')}
                       className={
                         (formik.touched.username && formik.errors.username) || signupState === 'error'
                           ? 'is-invalid'
@@ -109,6 +110,7 @@ const SignupForm = () => {
                       id="password"
                       name="password"
                       type="password"
+                      placeholder={t('passwordTooShort')}
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                       value={formik.values.password}
@@ -136,6 +138,7 @@ const SignupForm = () => {
                       id="passwordConfirmation"
                       name="passwordConfirmation"
                       type="password"
+                      placeholder={t('confirmationMustMatch')}
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                       value={formik.values.repeatPassword}
