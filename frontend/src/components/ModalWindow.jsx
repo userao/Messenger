@@ -7,9 +7,9 @@ import DeleteChannel from './DeleteChannel.jsx';
 import { actions as modalActions } from '../slices/modalSlice.js';
 
 const ModalWindow = ({ displayedModal }) => {
-  if (!displayedModal.type) return null;
-
   const dispatch = useDispatch();
+
+  if (!displayedModal.type) return null;
 
   const handleClose = () => {
     dispatch(modalActions.setDisplayedModal({ type: null }));

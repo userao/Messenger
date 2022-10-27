@@ -37,10 +37,9 @@ const getNormalized = (data) => {
 };
 
 const Chat = () => {
-  const { socket } = useAuth();
-  const headers = getAuthHeader();
-  const dispatch = useDispatch();
   const userChannels = useSelector(channelsSelectors.selectAll);
+  const { socket } = useAuth();
+  const dispatch = useDispatch();
   const { t } = useTranslation('translation', { keyPrefix: 'chatPage' });
 
   useEffect(() => {
@@ -75,6 +74,8 @@ const Chat = () => {
   }, [socket]);
 
   useEffect(() => {
+    const headers = getAuthHeader();
+
     const fetchData = async () => {
       const { data } = await axios.get(routes.getData(), { headers });
       const { channels, messages } = getNormalized(data);
