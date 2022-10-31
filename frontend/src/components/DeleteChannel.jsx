@@ -8,12 +8,12 @@ import useAuth from '../hooks/useAuth.js';
 const RenameChannel = ({ handleClose }) => {
   const { socket } = useAuth();
   const modal = useSelector((state) => state.modal.displayedModal);
-  const [isDisabled, setDisabled] = useState(false);
+  const [isSubmitting, setSubmitting] = useState(false);
   const { t } = useTranslation('translation', { keyPrefix: 'deleteChannelModal' });
 
   const handleSubmit = () => {
     socket.emit('removeChannel', { id: modal.channelId });
-    setDisabled(true);
+    setSubmitting(true);
   };
 
   return (
@@ -24,10 +24,10 @@ const RenameChannel = ({ handleClose }) => {
       <Modal.Body>
         <p className="lead">{t('body')}</p>
         <div className="d-flex justify-content-end">
-          <Button variant="secondary" onClick={handleClose} className="me-2" disabled={isDisabled}>
+          <Button variant="secondary" onClick={handleClose} className="me-2" disabled={isSubmitting}>
             {t('closeButton')}
           </Button>
-          <Button variant="danger" type="submit" onClick={handleSubmit} disabled={isDisabled}>
+          <Button variant="danger" type="submit" onClick={handleSubmit} disabled={isSubmitting}>
             {t('deleteButton')}
           </Button>
         </div>

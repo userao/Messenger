@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect } from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
@@ -18,13 +18,11 @@ const RenameChannel = ({ handleClose }) => {
   const renamedChannel = channels.find((channel) => channel.id === modal.channelId);
   const { socket } = useAuth();
 
-  const [isDisabled, setDisabled] = useState(false);
   const { t } = useTranslation('translation', { keyPrefix: 'renameChannelModal' });
 
   const handleSubmit = (values) => {
     const { newName } = values;
     socket.emit('renameChannel', { name: newName.trim(), id: modal.channelId });
-    setDisabled(true);
   };
 
   const formik = useFormik({
@@ -61,15 +59,15 @@ const RenameChannel = ({ handleClose }) => {
               onChange={formik.handleChange}
               value={formik.values.newName}
               className={inputClasses}
-              disabled={isDisabled}
+              disabled={formik.isSubmitting}
             />
             <Form.Label visuallyHidden htmlFor="newName">{t('label')}</Form.Label>
             <div className="invalid-feedback">{formik.errors.newName}</div>
             <div className="d-flex justify-content-end">
-              <Button variant="secondary" onClick={handleClose} className="me-2" disabled={isDisabled}>
+              <Button variant="secondary" onClick={handleClose} className="me-2" disabled={formik.isSubmitting}>
                 {t('closeButton')}
               </Button>
-              <Button variant="primary" type="submit" disabled={isDisabled}>
+              <Button variant="primary" type="submit" disabled={formik.isSubmitting}>
                 {t('addButton')}
               </Button>
             </div>
