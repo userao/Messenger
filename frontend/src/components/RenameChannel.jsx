@@ -8,7 +8,7 @@ import cn from 'classnames';
 import { useTranslation } from 'react-i18next';
 import * as yup from 'yup';
 import { selectors as channelsSelectors } from '../slices/channelsSlice.js';
-import useAuth from '../hooks/useAuth.js';
+import useSocket from '../hooks/useSocket.js';
 
 const RenameChannel = ({ handleClose }) => {
   const channelNameInput = useRef(null);
@@ -16,7 +16,7 @@ const RenameChannel = ({ handleClose }) => {
   const modal = useSelector((state) => state.modal.displayedModal);
   const channels = useSelector(channelsSelectors.selectAll);
   const renamedChannel = channels.find((channel) => channel.id === modal.channelId);
-  const { socket } = useAuth();
+  const { socket } = useSocket();
 
   const { t } = useTranslation('translation', { keyPrefix: 'renameChannelModal' });
 

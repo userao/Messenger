@@ -3,10 +3,10 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import useAuth from '../hooks/useAuth.js';
+import useSocket from '../hooks/useSocket.js';
 
 const RenameChannel = ({ handleClose }) => {
-  const { socket } = useAuth();
+  const { socket } = useSocket();
   const modal = useSelector((state) => state.modal.displayedModal);
   const [isSubmitting, setSubmitting] = useState(false);
   const { t } = useTranslation('translation', { keyPrefix: 'deleteChannelModal' });

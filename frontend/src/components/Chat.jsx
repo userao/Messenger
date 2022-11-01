@@ -16,16 +16,17 @@ import useAuth from '../hooks/useAuth.js';
 import 'react-toastify/dist/ReactToastify.css';
 import ChannelsCollumn from './ChannelsCollumn.jsx';
 import ChatBox from './ChatBox.jsx';
+import useSocket from '../hooks/useSocket.js';
 
-const getAuthHeader = () => {
-  const user = JSON.parse(localStorage.getItem('user'));
+// const getAuthHeader = () => {
+//   const user = JSON.parse(localStorage.getItem('user'));
 
-  if (user && user.token) {
-    return { Authorization: `Bearer ${user.token}` };
-  }
+//   if (user && user.token) {
+//     return { Authorization: `Bearer ${user.token}` };
+//   }
 
-  return {};
-};
+//   return {};
+// };
 
 const getNormalized = (data) => {
   const channels = data.channels.map((channel) => {
@@ -38,40 +39,40 @@ const getNormalized = (data) => {
 
 const Chat = () => {
   const userChannels = useSelector(channelsSelectors.selectAll);
-  const { socket } = useAuth();
+  const { socket } = useSocket();
+  const { getAuthHeader } = useAuth();
   const dispatch = useDispatch();
   const { t } = useTranslation('translation', { keyPrefix: 'chatPage' });
+  useEffect(() => {
+    socket.on('newMessage', (payload) => {
+      dispatch(messagesActions.addMessage(payload));
+      dispatch(messagesActions.setFetchingStatus('idle'));
+    });
 
-  // useEffect(() => {
-  //   socket.on('newMessage', (payload) => {
-  //     dispatch(messagesActions.addMessage(payload));
-  //     dispatch(messagesActions.setFetchingStatus('idle'));
-  //   });
+    socket.on('newChannel', (payload) => {
+      dispatch(channelsActions.addChannel(payload));
+      dispatch(channelsActions.setActiveChannel(payload.id));
+      dispatch(modalActions.setDisplayedModal({ type: null }));
+      toast.success(t('toastifyChannelCreated'));
+    });
 
-  //   socket.on('newChannel', (payload) => {
-  //     dispatch(channelsActions.addChannel(payload));
-  //     dispatch(channelsActions.setActiveChannel(payload.id));
-  //     dispatch(modalActions.setDisplayedModal({ type: null }));
-  //     toast.success(t('toastifyChannelCreated'));
-  //   });
+    socket.on('renameChannel', (payload) => {
+      dispatch(channelsActions.renameChannel(payload));
+      dispatch(modalActions.setDisplayedModal({ type: null }));
+      toast.success(t('toastifyChannelRenamed'));
+    });
 
-  //   socket.on('renameChannel', (payload) => {
-  //     dispatch(channelsActions.renameChannel(payload));
-  //     dispatch(modalActions.setDisplayedModal({ type: null }));
-  //     toast.success(t('toastifyChannelRenamed'));
-  //   });
+    socket.on('removeChannel', (payload) => {
+      dispatch(channelsActions.setActiveChannel(1));
+      dispatch(channelsActions.removeChannel(payload.id));
+      dispatch(modalActions.setDisplayedModal({ type: null }));
+      toast.success(t('toastifyChannelDeleted'));
+    });
 
-  //   socket.on('removeChannel', (payload) => {
-  //     dispatch(channelsActions.setActiveChannel(1));
-  //     dispatch(channelsActions.removeChannel(payload.id));
-  //     dispatch(modalActions.setDisplayedModal({ type: null }));
-  //     toast.success(t('toastifyChannelDeleted'));
-  //   });
-
-  //   socket.on('disconnect', () => {
-  //     toast.error(t('toastifyConnectionError'), { autoClose: false });
-  //   });
-  // }, [socket]);
+    socket.on('disconnect', () => {
+      toast.error(t('toastifyConnectionError'), { autoClose: false });
+    });
+  }, [socket]);
 
   useEffect(() => {
     const headers = getAuthHeader();

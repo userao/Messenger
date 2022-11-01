@@ -11,6 +11,7 @@ import {
 import { selectors as channelsSelectors } from '../slices/channelsSlice';
 import useAuth from '../hooks/useAuth';
 import Messages from './Messages';
+import useSocket from '../hooks/useSocket';
 
 filter.loadDictionary('ru');
 
@@ -26,7 +27,7 @@ const getUsername = () => {
 
 const ChatBox = () => {
   const { t } = useTranslation('translation', { keyPrefix: 'chatPage' });
-  const { socket } = useAuth();
+  const { socket } = useSocket();
   const dispatch = useDispatch();
   const messageInput = useRef(null);
   useEffect(() => messageInput.current.focus());

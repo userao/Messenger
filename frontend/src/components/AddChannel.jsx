@@ -8,13 +8,13 @@ import cn from 'classnames';
 import { useTranslation } from 'react-i18next';
 import * as yup from 'yup';
 import { selectors as channelsSelectors } from '../slices/channelsSlice.js';
-import useAuth from '../hooks/useAuth.js';
+import useSocket from '../hooks/useSocket.js';
 
 const AddChannel = ({ handleClose }) => {
   const channelNameInput = useRef(null);
   useEffect(() => channelNameInput.current.focus(), []);
   const channels = useSelector(channelsSelectors.selectAll);
-  const { socket } = useAuth();
+  const { socket } = useSocket();
   const { t } = useTranslation('translation', { keyPrefix: 'addChannelModal' });
 
   const handleSubmit = (values) => {
