@@ -3,26 +3,28 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 import { useFormik } from 'formik';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import cn from 'classnames';
 import { useTranslation } from 'react-i18next';
 import * as yup from 'yup';
-import { selectors as channelsSelectors } from '../slices/channelsSlice.js';
-import useSocket from '../hooks/useSocket.js';
+import {
+  selectors as channelsSelectors,
+  actions as channelsActions,
+} from '../slices/channelsSlice.js';
 
 const RenameChannel = ({ handleClose }) => {
   const channelNameInput = useRef(null);
   useEffect(() => channelNameInput.current.focus(), []);
+  const dispatch = useDispatch();
   const modal = useSelector((state) => state.modal.displayedModal);
   const channels = useSelector(channelsSelectors.selectAll);
   const renamedChannel = channels.find((channel) => channel.id === modal.channelId);
-  const { socket } = useSocket();
 
   const { t } = useTranslation('translation', { keyPrefix: 'renameChannelModal' });
 
   const handleSubmit = (values) => {
     const { newName } = values;
-    socket.emit('renameChannel', { name: newName.trim(), id: modal.channelId });
+    dispatch(channelsActions.emitRenameChannel({ name: newName.trim(), id: modal.channelId }));
   };
 
   const formik = useFormik({

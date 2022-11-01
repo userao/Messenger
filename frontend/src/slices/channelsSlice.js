@@ -1,4 +1,5 @@
 import { createEntityAdapter, createSlice } from '@reduxjs/toolkit';
+import socket from '../socket';
 
 const channelsAdapter = createEntityAdapter();
 const initialState = channelsAdapter.getInitialState();
@@ -20,6 +21,15 @@ const channelsSlice = createSlice({
       channelsAdapter.updateOne(state, { id: payload.id, changes: { name: payload.name } });
     },
     removeChannel: channelsAdapter.removeOne,
+    emitNewChannel: (state, { payload }) => {
+      socket.emit('newChannel', payload);
+    },
+    emitRenameChannel: (state, { payload }) => {
+      socket.emit('renameChannel', payload);
+    },
+    emitRemoveChannel: (state, { payload }) => {
+      socket.emit('removeChannel', payload);
+    },
   },
 });
 

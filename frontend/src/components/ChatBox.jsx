@@ -9,9 +9,7 @@ import {
   selectors as messagesSelectors,
 } from '../slices/messagesSlice';
 import { selectors as channelsSelectors } from '../slices/channelsSlice';
-import useAuth from '../hooks/useAuth';
 import Messages from './Messages';
-import useSocket from '../hooks/useSocket';
 
 filter.loadDictionary('ru');
 
@@ -27,7 +25,6 @@ const getUsername = () => {
 
 const ChatBox = () => {
   const { t } = useTranslation('translation', { keyPrefix: 'chatPage' });
-  const { socket } = useSocket();
   const dispatch = useDispatch();
   const messageInput = useRef(null);
   useEffect(() => messageInput.current.focus());
@@ -44,7 +41,8 @@ const ChatBox = () => {
     },
     onSubmit: (values) => {
       const text = values.body;
-      socket.emit('newMessage', { body: text, channelId: activeChannel.id, username });
+      dispatch(messagesActions
+        .emitNewMessage({ body: text, channelId: activeChannel.id, username }));
       dispatch(messagesActions.setFetchingStatus('sending'));
       formik.values.body = '';
     },

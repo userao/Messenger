@@ -1,5 +1,6 @@
 /* eslint-disable no-param-reassign */
 import { createEntityAdapter, createSlice } from '@reduxjs/toolkit';
+import socket from '../socket.js';
 import { actions as channelsActions } from './channelsSlice.js';
 
 const messagesAdapter = createEntityAdapter();
@@ -14,6 +15,9 @@ const messagesSlice = createSlice({
     addMessages: messagesAdapter.addMany,
     setFetchingStatus: (state, { payload }) => {
       state.fetchingStatus = payload;
+    },
+    emitNewMessage: (state, { payload }) => {
+      socket.emit('newMessage', payload);
     },
   },
   extraReducers: (builder) => {

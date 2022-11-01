@@ -3,23 +3,25 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 import { useFormik } from 'formik';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import cn from 'classnames';
 import { useTranslation } from 'react-i18next';
 import * as yup from 'yup';
-import { selectors as channelsSelectors } from '../slices/channelsSlice.js';
-import useSocket from '../hooks/useSocket.js';
+import {
+  selectors as channelsSelectors,
+  actions as channelsActions,
+} from '../slices/channelsSlice.js';
 
 const AddChannel = ({ handleClose }) => {
   const channelNameInput = useRef(null);
   useEffect(() => channelNameInput.current.focus(), []);
+  const dispatch = useDispatch();
   const channels = useSelector(channelsSelectors.selectAll);
-  const { socket } = useSocket();
   const { t } = useTranslation('translation', { keyPrefix: 'addChannelModal' });
 
   const handleSubmit = (values) => {
     const { channelName } = values;
-    socket.emit('newChannel', { name: channelName.trim() });
+    dispatch(channelsActions.emitNewChannel({ name: channelName.trim() }));
   };
 
   const formik = useFormik({

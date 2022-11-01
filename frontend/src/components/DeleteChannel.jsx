@@ -1,18 +1,18 @@
 import React, { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import useSocket from '../hooks/useSocket.js';
+import { actions as channelsActions } from '../slices/channelsSlice.js';
 
 const RenameChannel = ({ handleClose }) => {
-  const { socket } = useSocket();
   const modal = useSelector((state) => state.modal.displayedModal);
+  const dispatch = useDispatch();
   const [isSubmitting, setSubmitting] = useState(false);
   const { t } = useTranslation('translation', { keyPrefix: 'deleteChannelModal' });
 
   const handleSubmit = () => {
-    socket.emit('removeChannel', { id: modal.channelId });
+    dispatch(channelsActions.emitRemoveChannel({ id: modal.channelId }));
     setSubmitting(true);
   };
 

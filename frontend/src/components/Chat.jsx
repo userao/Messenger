@@ -10,23 +10,12 @@ import {
 import {
   actions as messagesActions,
 } from '../slices/messagesSlice.js';
-import { actions as modalActions } from '../slices/modalSlice.js';
 import routes from '../routes.js';
 import useAuth from '../hooks/useAuth.js';
 import 'react-toastify/dist/ReactToastify.css';
 import ChannelsCollumn from './ChannelsCollumn.jsx';
 import ChatBox from './ChatBox.jsx';
 import useSocket from '../hooks/useSocket.js';
-
-// const getAuthHeader = () => {
-//   const user = JSON.parse(localStorage.getItem('user'));
-
-//   if (user && user.token) {
-//     return { Authorization: `Bearer ${user.token}` };
-//   }
-
-//   return {};
-// };
 
 const getNormalized = (data) => {
   const channels = data.channels.map((channel) => {
@@ -44,48 +33,22 @@ const Chat = () => {
   const dispatch = useDispatch();
   const { t } = useTranslation('translation', { keyPrefix: 'chatPage' });
   useEffect(() => {
-    socket.on('newMessage', (payload) => {
-      dispatch(messagesActions.addMessage(payload));
-      dispatch(messagesActions.setFetchingStatus('idle'));
-    });
-
-    socket.on('newChannel', (payload) => {
-      dispatch(channelsActions.addChannel(payload));
-      dispatch(channelsActions.setActiveChannel(payload.id));
-      dispatch(modalActions.setDisplayedModal({ type: null }));
-      toast.success(t('toastifyChannelCreated'));
-    });
-
-    socket.on('renameChannel', (payload) => {
-      dispatch(channelsActions.renameChannel(payload));
-      dispatch(modalActions.setDisplayedModal({ type: null }));
-      toast.success(t('toastifyChannelRenamed'));
-    });
-
-    socket.on('removeChannel', (payload) => {
-      dispatch(channelsActions.setActiveChannel(1));
-      dispatch(channelsActions.removeChannel(payload.id));
-      dispatch(modalActions.setDisplayedModal({ type: null }));
-      toast.success(t('toastifyChannelDeleted'));
-    });
-
     socket.on('disconnect', () => {
       toast.error(t('toastifyConnectionError'), { autoClose: false });
     });
   }, [socket]);
 
-  useEffect(() => {
+  useEffect(async () => {
     const headers = getAuthHeader();
 
     const fetchData = async () => {
       const { data } = await axios.get(routes.getData(), { headers });
-      const { channels, messages } = getNormalized(data);
-
-      dispatch(channelsActions.addChannels(channels));
-      dispatch(messagesActions.addMessages(messages));
+      return getNormalized(data);
     };
 
-    fetchData();
+    const { channels, messages } = await fetchData();
+    dispatch(channelsActions.addChannels(channels));
+    dispatch(messagesActions.addMessages(messages));
   }, []);
 
   return (userChannels.length > 0 && (
