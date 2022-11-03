@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-no-constructed-context-values */
-import { useState } from 'react';
+import React, { useState } from 'react';
 import AuthContext from '../context/AuthContext.js';
 
 const AuthProvider = ({ children }) => {
