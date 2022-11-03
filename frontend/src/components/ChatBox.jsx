@@ -1,17 +1,14 @@
 import React, { useEffect, useRef } from 'react';
-import { useTranslation } from 'react-i18next';
 import { Button, Form } from 'react-bootstrap';
 import { useFormik } from 'formik';
 import { useDispatch, useSelector } from 'react-redux';
-import filter from 'leo-profanity';
 import {
   actions as messagesActions,
   selectors as messagesSelectors,
 } from '../slices/messagesSlice';
 import { selectors as channelsSelectors } from '../slices/channelsSlice';
 import Messages from './Messages';
-
-filter.loadDictionary('ru');
+import i18n from '../i18n.js';
 
 const getUsername = () => {
   const user = JSON.parse(localStorage.getItem('user'));
@@ -24,7 +21,6 @@ const getUsername = () => {
 };
 
 const ChatBox = () => {
-  const { t } = useTranslation('translation', { keyPrefix: 'chatPage' });
   const dispatch = useDispatch();
   const messageInput = useRef(null);
   useEffect(() => messageInput.current.focus());
@@ -59,7 +55,7 @@ const ChatBox = () => {
               {activeChannel.name}
             </b>
           </p>
-          <span className="text-muted">{t('messagesCounter', { counter: activeChannelMessages.length })}</span>
+          <span className="text-muted">{i18n.t('chatPage.messagesCounter', { counter: activeChannelMessages.length })}</span>
         </div>
 
         <Messages messages={activeChannelMessages} />
@@ -73,8 +69,8 @@ const ChatBox = () => {
                 value={formik.values.body}
                 className="border-0 p-0 ps-2"
                 name="body"
-                aria-label={t('ariaLabel')}
-                placeholder={t('messagesInputPlaceholder')}
+                aria-label={i18n.t('chatPage.ariaLabel')}
+                placeholder={i18n.t('chatPage.messagesInputPlaceholder')}
                 autoComplete="off"
               />
               <Button
@@ -98,7 +94,7 @@ const ChatBox = () => {
                       .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H4.5z"
                   />
                 </svg>
-                <span className="visually-hidden">{t('sendMessageSpan')}</span>
+                <span className="visually-hidden">{i18n.t('chatPage.sendMessageSpan')}</span>
               </Button>
             </div>
           </Form>

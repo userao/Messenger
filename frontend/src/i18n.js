@@ -1,9 +1,6 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 
-// the translations
-// (tip move them in a JSON file and import them,
-// or even better, manage them separated from your code: https://react.i18next.com/guides/multiple-translation-files)
 const resources = {
   ru: {
     translation: {
@@ -24,7 +21,6 @@ const resources = {
         invalidTooltip: 'Неверные имя пользователя или пароль',
         registerLink: 'Регистрация',
         footerText: 'Нет аккаунта?',
-        toastifyconnectionError: 'Ошибка соединения',
       },
       signupPage: {
         header: 'Регистрация',
@@ -45,12 +41,14 @@ const resources = {
         ariaLabel: 'Новое сообщение',
         sendMessageSpan: 'Отправить сообщение',
         channelControlSpan: 'Управление каналом',
-        renameButtonSpan: 'Переименовать',
-        deleteButtonSpan: 'Удалить',
-        toastifyChannelCreated: 'Канал создан!',
-        toastifyChannelRenamed: 'Канал переименован!',
-        toastifyChannelDeleted: 'Канал удалён!',
-        toastifyConnectionError: 'Ошибка соединения',
+        renameButton: 'Переименовать',
+        deleteButton: 'Удалить',
+      },
+      toastifyNotifications: {
+        channelCreated: 'Канал создан!',
+        channelRenamed: 'Канал переименован!',
+        channelRemoved: 'Канал удалён!',
+        connectionError: 'Ошибка соединения',
       },
       addChannelModal: {
         header: 'Добавить канал',

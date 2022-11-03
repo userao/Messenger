@@ -5,22 +5,22 @@ import Form from 'react-bootstrap/Form';
 import { useFormik } from 'formik';
 import { useDispatch, useSelector } from 'react-redux';
 import cn from 'classnames';
-import { useTranslation } from 'react-i18next';
 import * as yup from 'yup';
 import {
   selectors as channelsSelectors,
   actions as channelsActions,
 } from '../slices/channelsSlice.js';
+import i18n from '../i18n.js';
+import useFilter from '../hooks/useFilter';
 
 const RenameChannel = ({ handleClose }) => {
+  const filter = useFilter();
   const channelNameInput = useRef(null);
   useEffect(() => channelNameInput.current.focus(), []);
   const dispatch = useDispatch();
   const modal = useSelector((state) => state.modal.displayedModal);
   const channels = useSelector(channelsSelectors.selectAll);
   const renamedChannel = channels.find((channel) => channel.id === modal.channelId);
-
-  const { t } = useTranslation('translation', { keyPrefix: 'renameChannelModal' });
 
   const handleSubmit = (values) => {
     const { newName } = values;
@@ -29,14 +29,14 @@ const RenameChannel = ({ handleClose }) => {
 
   const formik = useFormik({
     initialValues: {
-      newName: renamedChannel.name,
+      newName: filter.clean(renamedChannel.name),
     },
     validationSchema: yup.object({
       newName: yup.string()
         .trim()
-        .min(3, t('invalidLengthError'))
-        .max(20, t('invalidLengthError'))
-        .notOneOf(channels.map((channel) => channel.name), t('notUniqueError')),
+        .min(3, i18n.t('renameChannelModal.invalidLengthError'))
+        .max(20, i18n.t('renameChannelModal.invalidLengthError'))
+        .notOneOf(channels.map((channel) => channel.name), i18n.t('renameChannelModal.notUniqueError')),
     }),
     validateOnChange: false,
     validateOnBlur: false,
@@ -48,7 +48,7 @@ const RenameChannel = ({ handleClose }) => {
   return (
     <>
       <Modal.Header closeButton>
-        <Modal.Title>{t('header')}</Modal.Title>
+        <Modal.Title>{i18n.t('renameChannelModal.header')}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Form onSubmit={formik.handleSubmit}>
@@ -63,14 +63,14 @@ const RenameChannel = ({ handleClose }) => {
               className={inputClasses}
               disabled={formik.isSubmitting}
             />
-            <Form.Label visuallyHidden htmlFor="newName">{t('label')}</Form.Label>
+            <Form.Label visuallyHidden htmlFor="newName">{i18n.t('renameChannelModal.label')}</Form.Label>
             <div className="invalid-feedback">{formik.errors.newName}</div>
             <div className="d-flex justify-content-end">
               <Button variant="secondary" onClick={handleClose} className="me-2" disabled={formik.isSubmitting}>
-                {t('closeButton')}
+                {i18n.t('renameChannelModal.closeButton')}
               </Button>
               <Button variant="primary" type="submit" disabled={formik.isSubmitting}>
-                {t('addButton')}
+                {i18n.t('renameChannelModal.addButton')}
               </Button>
             </div>
           </div>

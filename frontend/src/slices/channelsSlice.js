@@ -1,5 +1,5 @@
 import { createEntityAdapter, createSlice } from '@reduxjs/toolkit';
-import socket from '../socket';
+import socket from '../socket.js';
 
 const channelsAdapter = createEntityAdapter();
 const initialState = channelsAdapter.getInitialState();

@@ -17,8 +17,6 @@ import useAuth from '../hooks/useAuth.js';
 import ModalWindow from './ModalWindow.jsx';
 import MainContainer from './MainContainer.jsx';
 import Navigation from './Navigation.jsx';
-import AuthProvider from './AuthProvider.js';
-import SocketProvider from './SocketProvider.js';
 
 const rollbarConfig = {
   accessToken: 'POST_CLIENT_ITEM_ACCESS_TOKEN',
@@ -37,31 +35,27 @@ const ChatRoute = ({ children }) => {
 const App = () => (
   <Provider config={rollbarConfig}>
     <ErrorBoundary>
-      <AuthProvider>
-        <SocketProvider>
-          <ModalWindow displayedModal={useSelector((state) => state.modal.displayedModal)} />
-          <MainContainer>
-            <Router>
-              <Navigation />
+      <ModalWindow displayedModal={useSelector((state) => state.modal.displayedModal)} />
+      <MainContainer>
+        <Router>
+          <Navigation />
 
-              <Routes>
-                <Route exact path="/login" element={<LoginForm />} />
-                <Route exact path="/signup" element={<SignupForm />} />
-                <Route
-                  exact
-                  path="/"
-                  element={(
-                    <ChatRoute>
-                      <Chat />
-                    </ChatRoute>
-                  )}
-                />
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-            </Router>
-          </MainContainer>
-        </SocketProvider>
-      </AuthProvider>
+          <Routes>
+            <Route exact path="/login" element={<LoginForm />} />
+            <Route exact path="/signup" element={<SignupForm />} />
+            <Route
+              exact
+              path="/"
+              element={(
+                <ChatRoute>
+                  <Chat />
+                </ChatRoute>
+              )}
+            />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </Router>
+      </MainContainer>
     </ErrorBoundary>
   </Provider>
 );

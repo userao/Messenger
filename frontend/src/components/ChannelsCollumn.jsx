@@ -1,18 +1,17 @@
 import React from 'react';
 import Button from 'react-bootstrap/esm/Button';
 import { useDispatch } from 'react-redux';
-import { useTranslation } from 'react-i18next';
 import Channels from './Channels';
 import { actions as modalActions } from '../slices/modalSlice';
+import i18n from '../i18n.js';
 
 const ChannelsCollumn = ({ channels }) => {
   const dispatch = useDispatch();
-  const { t } = useTranslation('translation', { keyPrefix: 'chatPage' });
 
   return (
     <div className="col-4 col-md-2 border-end pt-5 px-0 bg-light">
       <div className="d-flex justify-content-between mb-2 ps-4 pe-2">
-        <span>{t('channelsHeader')}</span>
+        <span>{i18n.t('chatPage.channelsHeader')}</span>
         <Button
           variant="outline-light"
           className="p-0 text-primary btn-group-vertical"

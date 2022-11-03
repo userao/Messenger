@@ -1,7 +1,8 @@
 import React, { useEffect, useRef } from 'react';
-import filter from 'leo-profanity';
+import useFilter from '../hooks/useFilter.js';
 
 const Messages = ({ messages }) => {
+  const filter = useFilter();
   const bottom = useRef(null);
   useEffect(() => {
     bottom.current?.scrollIntoView();

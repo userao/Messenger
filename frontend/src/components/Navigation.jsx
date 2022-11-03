@@ -3,20 +3,16 @@ import {
   Container,
   Navbar,
 } from 'react-bootstrap';
-import { useTranslation } from 'react-i18next';
 import LoginButton from './LoginButton';
+import i18n from '../i18n.js';
 
-const Navigation = () => {
-  const { t } = useTranslation('translation', { keyPrefix: 'navbar' });
-
-  return (
-    <Navbar className="shadow-sm" bg="light" expand="lg">
-      <Container>
-        <Navbar.Brand href="/">{t('brand')}</Navbar.Brand>
-        <LoginButton />
-      </Container>
-    </Navbar>
-  );
-};
+const Navigation = () => (
+  <Navbar className="shadow-sm" bg="light" expand="lg">
+    <Container>
+      <Navbar.Brand href="/">{i18n.t('navbar.brand')}</Navbar.Brand>
+      <LoginButton />
+    </Container>
+  </Navbar>
+);
 
 export default Navigation;

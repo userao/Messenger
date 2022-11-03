@@ -4,11 +4,10 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import { useFormik } from 'formik';
 import axios from 'axios';
-import { useTranslation } from 'react-i18next';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import routes from '../routes.js';
 import useAuth from '../hooks/useAuth.js';
-import 'react-toastify/dist/ReactToastify.css';
+import i18n from '../i18n.js';
 
 const LoginForm = () => {
   const usernameInput = useRef(null);
@@ -18,7 +17,6 @@ const LoginForm = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const redirectPath = location.state ? location.state.from.pathname : '/';
-  const { t } = useTranslation('translation', { keyPrefix: 'loginPage' });
 
   const handleSubmit = (values) => {
     const auth = {
@@ -40,7 +38,7 @@ const LoginForm = () => {
           setLoginState('incorrect data');
         } else {
           setLoginState('connection error');
-          toast.error(t('toastifyConnectionError'), { autoClose: false });
+          toast.error(i18n.t('toastifyNotifications.connectionError'), { autoClose: false });
         }
       });
   };
@@ -60,7 +58,7 @@ const LoginForm = () => {
           <div className="card shadow-sm">
             <div className="card-body d-flex flex-column flex-md-row justify-content-around align-items-center p-5">
               <Form className="w-50" onSubmit={formik.handleSubmit}>
-                <h1 className="text-center mb-4">{t('header')}</h1>
+                <h1 className="text-center mb-4">{i18n.t('loginPage.header')}</h1>
                 <Form.Floating
                   className="mb-3"
                 >
@@ -71,11 +69,11 @@ const LoginForm = () => {
                     name="username"
                     onChange={formik.handleChange}
                     value={formik.values.username}
-                    placeholder={t('usernameLabel')}
+                    placeholder={i18n.t('loginPage.usernameLabel')}
                     className={loginState === 'incorrect data' ? 'is-invalid' : null}
                     disabled={loginState === 'requesting'}
                   />
-                  <label className="form-label" htmlFor="username">{t('usernameLabel')}</label>
+                  <label className="form-label" htmlFor="username">{i18n.t('loginPage.usernameLabel')}</label>
                 </Form.Floating>
 
                 <Form.Floating
@@ -86,34 +84,40 @@ const LoginForm = () => {
                     id="password"
                     name="password"
                     type="password"
-                    placeholder={t('passwordLabel')}
+                    placeholder={i18n.t('loginPage.passwordLabel')}
                     onChange={formik.handleChange}
                     value={formik.values.password}
                     className={loginState === 'incorrect data' ? 'is-invalid' : null}
                     disabled={loginState === 'requesting'}
                   />
-                  <label className="form-label" htmlFor="password">{t('passwordLabel')}</label>
+                  <label className="form-label" htmlFor="password">{i18n.t('loginPage.passwordLabel')}</label>
                   {loginState === 'success' && navigate(redirectPath)}
                   {loginState === 'incorrect data'
-                    ? <div className="invalid-tooltip">{t('invalidTooltip')}</div>
+                    ? <div className="invalid-tooltip">{i18n.t('loginPage.invalidTooltip')}</div>
                     : null}
                 </Form.Floating>
-                <Button className="w-100" disabled={loginState === 'requesting'} variant="primary" type="submit">{t('logInButton')}</Button>
+                <Button
+                  className="w-100"
+                  disabled={loginState === 'requesting'}
+                  variant="primary"
+                  type="submit"
+                >
+                  {i18n.t('loginPage.logInButton')}
+                </Button>
               </Form>
             </div>
             <div className="card-footer p-4">
               <div className="text-center">
                 <span>
-                  {t('footerText')}
+                  {i18n.t('loginPage.footerText')}
                 </span>
                 {' '}
-                <a href="/signup">{t('registerLink')}</a>
+                <a href="/signup">{i18n.t('loginPage.registerLink')}</a>
               </div>
             </div>
           </div>
         </div>
       </div>
-      <ToastContainer />
     </div>
   );
 };

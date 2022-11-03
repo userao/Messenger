@@ -4,13 +4,16 @@ import Button from 'react-bootstrap/Button';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import Dropdown from 'react-bootstrap/Dropdown';
 import { useDispatch } from 'react-redux';
-import filter from 'leo-profanity';
-import { useTranslation } from 'react-i18next';
 import { actions as modalActions } from '../slices/modalSlice';
+import useFilter from '../hooks/useFilter.js';
+import i18n from '../i18n.js';
 
-filter.loadDictionary('ru');
-
-const RegularButton = ({ channel, variant, handleSelect }) => (
+const RegularButton = ({
+  channel,
+  variant,
+  handleSelect,
+  filter,
+}) => (
   <Button onClick={() => handleSelect(channel.id)} variant={variant} className="w-100 rounded-0 text-start">
     <span className="me-1">#</span>
     {filter.clean(channel.name)}
@@ -21,7 +24,7 @@ const DropdownButton = ({
   channel,
   variant,
   handleSelect,
-  translate,
+  filter,
   dispatch,
 }) => (
   <Dropdown as={ButtonGroup} className="d-flex">
@@ -31,27 +34,27 @@ const DropdownButton = ({
     </Button>
 
     <Dropdown.Toggle split variant={variant} id="dropdown-split-basic" className="flex-grow-0">
-      <span className="visually-hidden">{translate('channelControlSpan')}</span>
+      <span className="visually-hidden">{i18n.t('chatPage.channelControlSpan')}</span>
     </Dropdown.Toggle>
 
     <Dropdown.Menu>
       <Dropdown.Item onClick={() => dispatch(modalActions.setDisplayedModal({ type: 'renaming', channelId: channel.id }))}>
-        Rename
-        <span className="visually-hidden">{translate('renameButtonSpan')}</span>
+        {i18n.t('chatPage.renameButton')}
+        <span className="visually-hidden">{i18n.t('chatPage.renameButton')}</span>
       </Dropdown.Item>
       <Dropdown.Item onClick={() => dispatch(modalActions.setDisplayedModal({ type: 'deleting', channelId: channel.id }))}>
-        Delete
-        <span className="visually-hidden">{translate('deleteButtonSpan')}</span>
+        {i18n.t('chatPage.deleteButton')}
+        <span className="visually-hidden">{i18n.t('chatPage.deleteButton')}</span>
       </Dropdown.Item>
     </Dropdown.Menu>
   </Dropdown>
 );
 
 const Channel = ({ channel, handleSelect }) => {
+  const filter = useFilter();
   const variant = channel.active ? 'secondary' : 'light';
   const { removable } = channel;
   const dispatch = useDispatch();
-  const { t } = useTranslation('translation', { keyPrefix: 'chatPage' });
 
   const buttonTypes = {
     true: DropdownButton,
@@ -66,7 +69,7 @@ const Channel = ({ channel, handleSelect }) => {
         channel={channel}
         variant={variant}
         handleSelect={handleSelect}
-        translate={t}
+        filter={filter}
         dispatch={dispatch}
       />
     </Nav.Item>

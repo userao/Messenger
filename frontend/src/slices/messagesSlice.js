@@ -1,7 +1,7 @@
 /* eslint-disable no-param-reassign */
 import { createEntityAdapter, createSlice } from '@reduxjs/toolkit';
-import socket from '../socket.js';
 import { actions as channelsActions } from './channelsSlice.js';
+import socket from '../socket.js';
 
 const messagesAdapter = createEntityAdapter();
 
