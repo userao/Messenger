@@ -26,10 +26,10 @@ const getNormalized = (data) => {
 const Chat = () => {
   const userChannels = useSelector(channelsSelectors.selectAll);
   const { getAuthHeader } = useAuth();
+  const dispatch = useDispatch();
+  const headers = getAuthHeader();
 
   useEffect(() => {
-    const dispatch = useDispatch();
-    const headers = getAuthHeader();
     const fetchData = async () => {
       const { data } = await axios.get(routes.getData(), { headers });
       const { channels, messages } = getNormalized(data);
