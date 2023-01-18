@@ -11,8 +11,8 @@
 
 Simple slack-like messenger.
 
-### Deployed project on heroku
-https://aqueous-hollows-52975.herokuapp.com/
+### Deployed project
+https://messenger-xi-gold.vercel.app/login
 
 ### Install
 
