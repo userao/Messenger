@@ -11,9 +11,6 @@
 
 Simple slack-like messenger.
 
-### Deployed project
-https://messenger-xi-gold.vercel.app/login
-
 ### Install
 
 <code>npm install</code>
